@@ -53,13 +53,17 @@ void	parse_textures(char *line, t_map *map)
 
 char	**parse_grid(int fd, char *line)
 {
-	char **grid;
-	int i;
+	char	**grid;
+	char	*newline;
+	int		i;
 
 	i = 0;
 	grid = malloc(sizeof(char *) * 1024);
 	while (line)
 	{
+		newline = ft_strchr(line, '\n');
+		if (newline)
+			*newline = '\0';
 		if (line[0] == ' ' || line[0] == '1')
 		{
 			grid[i++] = ft_strdup(line);
@@ -106,7 +110,7 @@ t_map	*parse_map(const char *filename)
 	return (map);
 }
 
-void draw_rectangle(mlx_image_t *img, int x, int y, int width, int height, uint32_t color)
+void	draw_rectangle(mlx_image_t *img, int x, int y, int width, int height, uint32_t color)
 {
 	int	i;
 	int	j;
@@ -131,34 +135,41 @@ void draw_rectangle(mlx_image_t *img, int x, int y, int width, int height, uint3
 	}
 }
 
-void draw_grid(mlx_image_t *img, t_map *map)
+void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 {
-	int	square_size;
+	int	width;
+	int	height;
+	int	row_width;
+
+	width = 0;
+	height = 0;
+	while (map->grid[height])
+	{
+		row_width = ft_strlen(map->grid[height]);
+		if (row_width > width)
+			width = row_width;
+		height++;
+	}
+	*grid_width = width;
+	*grid_height = height;
+}
+
+void	draw_grid(mlx_image_t *img, t_map *map) {
 	int	x;
 	int	y;
 
-	square_size = 20;
 	y = 0;
-	while (map->grid[y])
-	{
+	while (map->grid[y]) {
 		x = 0;
-		while (map->grid[y][x])
-		{
-			if (map->grid[y][x] == '1')
-			{
-				draw_rectangle(img, x * square_size, y * square_size, square_size, square_size, 0xFFFFFF);
-			}
-			else if (map->grid[y][x] == '0')
-			{
-				draw_rectangle(img, x * square_size, y * square_size, square_size, square_size, 0x000000);
+		while (map->grid[y][x]) {
+			if (map->grid[y][x] == '1') {
+				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0xFFFFFF);
+			} else if (map->grid[y][x] == '0') {
+				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0x000000);
 			}
 			x++;
 		}
 		y++;
 	}
 }
-
-
-
-
 

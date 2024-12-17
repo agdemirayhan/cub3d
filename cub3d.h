@@ -10,8 +10,10 @@
 # include "./get_next_line/get_next_line.h"
 # include "./libft/libft.h"
 # include <MLX42/MLX42.h>
-# define WIDTH 1000
-# define HEIGHT 1000
+
+# ifndef SQUARE_SIZE
+#  define SQUARE_SIZE 42
+# endif
 
 typedef struct	s_map
 {
@@ -29,11 +31,12 @@ typedef struct	s_map
 }			t_map;
 
 
-void draw_grid(mlx_image_t *img, t_map *map);
+void	draw_grid(mlx_image_t *img, t_map *map);
 t_map	*parse_map(const char *filename);
 char	**parse_grid(int fd, char *line);
 void	parse_textures(char *line, t_map *map);
-int	parse_color(char *line, int *r, int *g, int *b);
+int		parse_color(char *line, int *r, int *g, int *b);
 void	free_map(t_map *map);
+void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height);
 
 #endif
