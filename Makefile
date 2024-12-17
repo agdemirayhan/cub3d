@@ -1,15 +1,14 @@
-#fractol
-
 NAME := cub3D
 
 OBJ_DIR := objs
 MLX_DIR := ./MLX42
 LIBFT := ./libft
+GNL := ./get_next_line
 
-HEADERS := -I ./include -I $(MLX_DIR)/include -I $(LIBFT)/include
-LIBS := $(MLX_DIR)/build/libmlx42.a $(LIBFT)/libft.a -ldl -lglfw -pthread -lm
+HEADERS := -I ./include -I $(MLX_DIR)/include -I $(LIBFT)/include -I $(GNL)/include
+LIBS := $(MLX_DIR)/build/libmlx42.a $(LIBFT)/libft.a $(GNL)/get_next_line.a -ldl -lglfw -pthread -lm
 
-SRCS := cub3d.c
+SRCS := cub3d.c map_utils.c
 OBJS := $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
 RM := rm
@@ -20,7 +19,7 @@ MAKE_DIR := mkdir
 CFLAGS := -Wall -Wextra -Werror
 LIB_FLAGS := -framework Cocoa -framework OpenGL -framework IOKit $(LIBS) -g
 
-all: libmlx libft $(NAME)
+all: libmlx libft get_next_line $(NAME)
 
 libmlx:
 	@if [ ! -d "$(MLX_DIR)" ]; then \
@@ -34,6 +33,9 @@ libmlx:
 libft:
 	@$(MAKE) -C $(LIBFT)
 
+get_next_line:
+	@$(MAKE) -C $(GNL)
+
 $(NAME): $(OBJ_DIR) $(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 	@echo "Successful build!"
@@ -42,11 +44,13 @@ clean:
 	@$(RM) -rf $(OBJ_DIR)
 	@$(RM) -rf $(MLX_DIR)/build
 	@$(MAKE) -C $(LIBFT) clean
+	@$(MAKE) -C $(GNL) clean
 	@echo "Bins successfully cleaned!"
 
 fclean: clean
 	@$(RM) -rf $(NAME)
 	@$(MAKE) -C $(LIBFT) fclean
+	@$(MAKE) -C $(GNL) fclean
 	@$(RM) -rf $(MLX_DIR)
 	@echo "Everything successfully cleaned!"
 
@@ -59,5 +63,5 @@ $(OBJ_DIR):
 	@echo "Starting..."
 	$(MAKE_DIR) $(OBJ_DIR)
 
-.PHONY: all clean fclean re libmlx libft
+.PHONY: all clean fclean re libmlx libft get_next_line
 
