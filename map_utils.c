@@ -163,10 +163,12 @@ void	draw_grid(mlx_image_t *img, t_map *map) {
 		x = 0;
 		while (map->grid[y][x]) {
 			if (map->grid[y][x] == '1') {
-				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0xFFFFFF);
+				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0xFFFFFFFF);
 			} else if (map->grid[y][x] == '0') {
-				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0x000000);
+				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0x000000FF);
 			}
+			else if (map->grid[y][x] == 'S') 
+				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0xFF0000FF);
 			x++;
 		}
 		y++;
