@@ -51,11 +51,12 @@ void	parse_textures(char *line, t_map *map)
 		map->texture_ea = ft_strdup(&line[3]);
 }
 
-char	**parse_grid(int fd, char *line)
+char	**parse_grid(int fd, char *line, t_game *game)
 {
 	char	**grid;
 	char	*newline;
 	int		i;
+	int		j;
 
 	i = 0;
 	grid = malloc(sizeof(char *) * 1024);
@@ -64,18 +65,26 @@ char	**parse_grid(int fd, char *line)
 		newline = ft_strchr(line, '\n');
 		if (newline)
 			*newline = '\0';
-		if (line[0] == ' ' || line[0] == '1')
+		grid[i] = ft_strdup(line);
+		j = 0;
+		while (grid[i][j])
 		{
-			grid[i++] = ft_strdup(line);
+			if (grid[i][j] == 'N' || grid[i][j] == 'S' || grid[i][j] == 'E' || grid[i][j] == 'W')
+			{
+				game->posx = j;
+				game->posy = i;
+				grid[i][j] = '0';
+			}
+			j++;
 		}
-		free(line);
+		i++;
 		line = get_next_line(fd);
 	}
 	grid[i] = NULL;
-	return (grid);
+	return grid;
 }
 
-t_map	*parse_map(const char *filename)
+t_map	*parse_map(const char *filename, t_game *game)
 {
 	t_map	*map;
 	char	*line;
@@ -94,23 +103,20 @@ t_map	*parse_map(const char *filename)
 		if (ft_strncmp(line, "F ", 2) == 0)
 			parse_color(&line[2], &map->floor_r, &map->floor_g, &map->floor_b);
 		else if (ft_strncmp(line, "C ", 2) == 0)
-			parse_color(&line[2], &map->ceiling_r, &map->ceiling_g,
-					&map->ceiling_b);
-		else if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO",
-					2) == 0 ||
-					ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA",
-							2) == 0)
+			parse_color(&line[2], &map->ceiling_r, &map->ceiling_g, &map->ceiling_b);
+		else if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0 ||
+				ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0)
 			parse_textures(line, map);
 		else if (line[0] == ' ' || line[0] == '1')
 		{
-			map->grid = parse_grid(fd, line);
+			map->grid = parse_grid(fd, line, game);
 			break ;
 		}
 		free(line);
 		line = get_next_line(fd);
 	}
 	close(fd);
-	return (map);
+	return map;
 }
 
 void	draw_rectangle(mlx_image_t *img, int x, int y, int width, int height,
@@ -172,23 +178,15 @@ void	draw_grid(mlx_image_t *img, t_game *game)
 		{
 			if (game->map.grid[y][x] == '1')
 			{
-				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE,
-						SQUARE_SIZE, SQUARE_SIZE, 0xFFFFFFFF);
+				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0xFFFFFFFF);
 			}
 			else if (game->map.grid[y][x] == '0')
 			{
-				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE,
-						SQUARE_SIZE, SQUARE_SIZE, 0x000000FF);
-			}
-			else if (game->map.grid[y][x] == 'S')
-			{
-				// draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE,
-				// 		SQUARE_SIZE, SQUARE_SIZE, 0xFF0000FF);
-				game->posx = y * SQUARE_SIZE + SQUARE_SIZE / 2;
-				game->posy = x * SQUARE_SIZE + SQUARE_SIZE / 2;
+				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0x000000FF);
 			}
 			x++;
 		}
 		y++;
 	}
+	draw_rectangle(img, game->posx * SQUARE_SIZE, game->posy * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0xFF0000FF);
 }

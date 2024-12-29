@@ -9,7 +9,7 @@ int	main(int argc, char **argv)
 		printf("WRONG! use: ./cub3d <map_file>\n");
 		return (1);
 	}
-	game.map = *parse_map(argv[1]);
+	game.map = *parse_map(argv[1], &game);
 	if (!game.map.grid)
 	{
 		printf("Error parsing map file.\n");
