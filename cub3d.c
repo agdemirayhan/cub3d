@@ -2,37 +2,39 @@
 
 int	main(int argc, char **argv)
 {
-	t_map	*map;
-	mlx_t	*mlx;
-	int		grid_width;
-	int		grid_height;
-	int		window_width;
-	int		window_height;
+	t_game		game;
 
 	if (argc != 2)
 	{
 		printf("WRONG! use: ./cub3d <map_file>\n");
 		return (1);
 	}
-	map = parse_map(argv[1]);
-	if (!map)
+	game.map = *parse_map(argv[1]);
+	if (!game.map.grid)
 	{
 		printf("Error parsing map file.\n");
 		return (1);
 	}
-	calculate_grid_size(map, &grid_width, &grid_height);
-	window_width = grid_width * SQUARE_SIZE;
-	window_height = grid_height * SQUARE_SIZE;
-	mlx = mlx_init(window_width, window_height, "Cub3D", false);
-	if (!mlx)
+	calculate_grid_size(&game.map, &game.grid_width, &game.grid_height);
+	game.window_width = game.grid_width * SQUARE_SIZE;
+	game.window_height = game.grid_height * SQUARE_SIZE;
+	game.mlx = mlx_init(game.window_width, game.window_height, "Cub3D", false);
+	if (!game.mlx)
+	{
+		free_map(&game.map);
 		return (1);
-	mlx_image_t *img = mlx_new_image(mlx, window_width, window_height);
-	if (!img)
+	}
+	game.img = mlx_new_image(game.mlx, game.window_width, game.window_height);
+	if (!game.img)
+	{
+		mlx_terminate(game.mlx);
+		free_map(&game.map);
 		return (1);
-	draw_grid(img, map);
-	mlx_image_to_window(mlx, img, 0, 0);
-	mlx_loop(mlx);
-	free_map(map);
+	}
+	draw_grid(game.img, &game.map);
+	mlx_image_to_window(game.mlx, game.img, 0, 0);
+	mlx_loop(game.mlx);
+	mlx_terminate(game.mlx);
+	free_map(&game.map);
 	return (0);
 }
-
