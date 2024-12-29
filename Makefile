@@ -8,7 +8,7 @@ GNL := ./get_next_line
 HEADERS := -I ./include -I $(MLX_DIR)/include -I $(LIBFT)/include -I $(GNL)/include
 LIBS := $(MLX_DIR)/build/libmlx42.a $(LIBFT)/libft.a $(GNL)/get_next_line.a -ldl -lglfw -pthread -lm
 
-SRCS := cub3d.c map_utils.c
+SRCS := cub3d.c map_utils.c hooks.c
 OBJS := $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
 RM := rm
@@ -16,7 +16,7 @@ CC := cc
 MAKE := make
 MAKE_DIR := mkdir
 
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Werror -fsanitize=address
 LIB_FLAGS := -framework Cocoa -framework OpenGL -framework IOKit $(LIBS) -g
 
 all: libmlx libft get_next_line $(NAME)

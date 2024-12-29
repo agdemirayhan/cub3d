@@ -72,7 +72,7 @@ char	**parse_grid(int fd, char *line)
 		line = get_next_line(fd);
 	}
 	grid[i] = NULL;
-	return grid;
+	return (grid);
 }
 
 t_map	*parse_map(const char *filename)
@@ -94,14 +94,17 @@ t_map	*parse_map(const char *filename)
 		if (ft_strncmp(line, "F ", 2) == 0)
 			parse_color(&line[2], &map->floor_r, &map->floor_g, &map->floor_b);
 		else if (ft_strncmp(line, "C ", 2) == 0)
-			parse_color(&line[2], &map->ceiling_r, &map->ceiling_g, &map->ceiling_b);
-		else if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0 ||
-				ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0)
+			parse_color(&line[2], &map->ceiling_r, &map->ceiling_g,
+					&map->ceiling_b);
+		else if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO",
+					2) == 0 ||
+					ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA",
+							2) == 0)
 			parse_textures(line, map);
 		else if (line[0] == ' ' || line[0] == '1')
 		{
 			map->grid = parse_grid(fd, line);
-			break;
+			break ;
 		}
 		free(line);
 		line = get_next_line(fd);
@@ -110,7 +113,8 @@ t_map	*parse_map(const char *filename)
 	return (map);
 }
 
-void	draw_rectangle(mlx_image_t *img, int x, int y, int width, int height, uint32_t color)
+void	draw_rectangle(mlx_image_t *img, int x, int y, int width, int height,
+		uint32_t color)
 {
 	int	i;
 	int	j;
@@ -125,7 +129,8 @@ void	draw_rectangle(mlx_image_t *img, int x, int y, int width, int height, uint3
 		{
 			px = x + j;
 			py = y + i;
-			if (px >= 0 && px < (int)img->width && py >= 0 && py < (int)img->height)
+			if (px >= 0 && px < (int)img->width && py >= 0
+				&& py < (int)img->height)
 			{
 				mlx_put_pixel(img, px, py, color);
 			}
@@ -154,24 +159,36 @@ void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 	*grid_height = height;
 }
 
-void	draw_grid(mlx_image_t *img, t_map *map) {
+void	draw_grid(mlx_image_t *img, t_game *game)
+{
 	int	x;
 	int	y;
 
 	y = 0;
-	while (map->grid[y]) {
+	while (game->map.grid[y])
+	{
 		x = 0;
-		while (map->grid[y][x]) {
-			if (map->grid[y][x] == '1') {
-				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0xFFFFFFFF);
-			} else if (map->grid[y][x] == '0') {
-				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0x000000FF);
+		while (game->map.grid[y][x])
+		{
+			if (game->map.grid[y][x] == '1')
+			{
+				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE,
+						SQUARE_SIZE, SQUARE_SIZE, 0xFFFFFFFF);
 			}
-			else if (map->grid[y][x] == 'S') 
-				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0xFF0000FF);
+			else if (game->map.grid[y][x] == '0')
+			{
+				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE,
+						SQUARE_SIZE, SQUARE_SIZE, 0x000000FF);
+			}
+			else if (game->map.grid[y][x] == 'S')
+			{
+				// draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE,
+				// 		SQUARE_SIZE, SQUARE_SIZE, 0xFF0000FF);
+				game->posx = y * SQUARE_SIZE + SQUARE_SIZE / 2;
+				game->posy = x * SQUARE_SIZE + SQUARE_SIZE / 2;
+			}
 			x++;
 		}
 		y++;
 	}
 }
-

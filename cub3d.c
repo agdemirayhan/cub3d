@@ -2,7 +2,7 @@
 
 int	main(int argc, char **argv)
 {
-	t_game		game;
+	t_game	game;
 
 	if (argc != 2)
 	{
@@ -31,8 +31,9 @@ int	main(int argc, char **argv)
 		free_map(&game.map);
 		return (1);
 	}
-	draw_grid(game.img, &game.map);
+	draw_grid(game.img, &game);
 	mlx_image_to_window(game.mlx, game.img, 0, 0);
+	mlx_key_hook(game.mlx, &keyhook, &game);
 	mlx_loop(game.mlx);
 	mlx_terminate(game.mlx);
 	free_map(&game.map);

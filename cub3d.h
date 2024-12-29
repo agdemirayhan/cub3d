@@ -39,9 +39,11 @@ typedef struct s_game
 	int			grid_height;
 	int			window_width;
 	int			window_height;
+	int			posx;
+	int			posy;
 }				t_game;
 
-void			draw_grid(mlx_image_t *img, t_map *map);
+void			draw_grid(mlx_image_t *img, t_game *game);
 t_map			*parse_map(const char *filename);
 char			**parse_grid(int fd, char *line);
 void			parse_textures(char *line, t_map *map);
@@ -49,5 +51,6 @@ int				parse_color(char *line, int *r, int *g, int *b);
 void			free_map(t_map *map);
 void			calculate_grid_size(t_map *map, int *grid_width,
 					int *grid_height);
+void			keyhook(mlx_key_data_t keydata, void *param);
 
 #endif
