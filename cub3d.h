@@ -41,6 +41,7 @@ typedef struct s_game
 	int			window_height;
 	int			posx;
 	int			posy;
+	double		angle;
 }				t_game;
 
 void			draw_grid(mlx_image_t *img, t_game *game);

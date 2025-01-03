@@ -165,10 +165,53 @@ void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 	*grid_height = height;
 }
 
+//this wont be necesarry later i guess
+void	draw_line(mlx_image_t *img, int x0, int y0, int x1, int y1, uint32_t color)
+{
+	int	dx;
+	int	dy;
+	int	sx;
+	int	sy;
+	int	err;
+	int	e2;
+
+	dx = abs(x1 - x0);
+	dy = abs(y1 - y0);
+	err = dx - dy;
+	if (x0 < x1)
+		sx = 1;
+	else
+		sx = -1;
+	if (y0 < y1)
+		sy = 1;
+	else
+		sy = -1;
+	while (1)
+	{
+		mlx_put_pixel(img, x0, y0, color);
+		if (x0 == x1 && y0 == y1)
+			break ;
+		e2 = err * 2;
+		if (e2 > -dy)
+		{
+			err -= dy;
+			x0 += sx;
+		}
+		if (e2 < dx)
+		{
+			err += dx;
+			y0 += sy;
+		}
+	}
+}
+
 void	draw_grid(mlx_image_t *img, t_game *game)
 {
 	int	x;
 	int	y;
+	int	line_length;
+	int	end_x;
+	int	end_y;
 
 	y = 0;
 	while (game->map.grid[y])
@@ -189,4 +232,8 @@ void	draw_grid(mlx_image_t *img, t_game *game)
 		y++;
 	}
 	draw_rectangle(img, game->posx * SQUARE_SIZE, game->posy * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, 0xFF0000FF);
+	line_length = 100;
+	end_x = game->posx * SQUARE_SIZE + SQUARE_SIZE / 2 + line_length * cos(game->angle);
+	end_y = game->posy * SQUARE_SIZE + SQUARE_SIZE / 2 + line_length * sin(game->angle);
+	draw_line(img, game->posx * SQUARE_SIZE + SQUARE_SIZE / 2, game->posy * SQUARE_SIZE + SQUARE_SIZE / 2, end_x, end_y, 0x00F0F0FF);
 }

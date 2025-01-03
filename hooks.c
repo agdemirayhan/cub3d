@@ -100,6 +100,10 @@ void	keyhook(mlx_key_data_t keydata, void *param)
 			move_left(game);
 		if (keydata.key == MLX_KEY_D)
 			move_right(game);
+		if (keydata.key == MLX_KEY_LEFT)
+			game->angle -= 0.1;
+		if (keydata.key == MLX_KEY_RIGHT)
+			game->angle += 0.1;
 		// if (game->status == END)
 		// {
 		// 	ft_printf("Congratulations!\n");
