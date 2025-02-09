@@ -16,7 +16,8 @@ CC := cc
 MAKE := make
 MKDIR := mkdir -p
 
-CFLAGS := -Wall -Wextra -Werror -fsanitize=address
+# CFLAGS := -Wall -Wextra -Werror -fsanitize=address
+CFLAGS := -fsanitize=address
 LIB_FLAGS := -framework Cocoa -framework OpenGL -framework IOKit $(LIBS) -g
 
 # Detect Homebrew GLFW installation

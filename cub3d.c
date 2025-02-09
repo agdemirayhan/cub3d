@@ -31,7 +31,7 @@ int	main(int argc, char **argv)
 		free_map(&game.map);
 		return (1);
 	}
-	game.angle = 0;
+	game.angle = 1;
 	draw_grid(game.img, &game);
 	mlx_image_to_window(game.mlx, game.img, 0, 0);
 	mlx_key_hook(game.mlx, &keyhook, &game);

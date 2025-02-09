@@ -72,8 +72,8 @@ char	**parse_grid(int fd, char *line, t_game *game)
 			if (grid[i][j] == 'N' || grid[i][j] == 'S' || grid[i][j] == 'E'
 				|| grid[i][j] == 'W')
 			{
-				game->posx = j;
-				game->posy = i;
+				game->posx = j * SQUARE_SIZE;
+				game->posy = i * SQUARE_SIZE;
 				grid[i][j] = '0';
 			}
 			j++;
@@ -142,6 +142,11 @@ void	draw_rectangle(mlx_image_t *img, int x, int y, int width, int height,
 				&& py < (int)img->height)
 			{
 				mlx_put_pixel(img, px, py, color);
+			}
+			if ((px % SQUARE_SIZE == 0 || px % SQUARE_SIZE == 42) || (py
+					% SQUARE_SIZE == 0 || py % SQUARE_SIZE == 42))
+			{
+				mlx_put_pixel(img, px, py, 0xFFFFFFFF);
 			}
 			j++;
 		}
@@ -237,13 +242,13 @@ void	draw_grid(mlx_image_t *img, t_game *game)
 		}
 		y++;
 	}
-	draw_rectangle(img, game->posx * SQUARE_SIZE, game->posy * SQUARE_SIZE,
-		SQUARE_SIZE, SQUARE_SIZE, 0xFF0000FF);
+	draw_rectangle(img, game->posx, game->posy, 10,
+		10, 0xFF0000FF);
 	line_length = 100;
 	end_x = game->posx * SQUARE_SIZE + SQUARE_SIZE / 2 + line_length
 		* cos(game->angle);
 	end_y = game->posy * SQUARE_SIZE + SQUARE_SIZE / 2 + line_length
 		* sin(game->angle);
-	draw_line(img, game->posx * SQUARE_SIZE + SQUARE_SIZE / 2, game->posy
-		* SQUARE_SIZE + SQUARE_SIZE / 2, end_x, end_y, 0x00F0F0FF);
+	// draw_line(img, game->posx * SQUARE_SIZE + SQUARE_SIZE / 2, game->posy
+	// 	* SQUARE_SIZE + SQUARE_SIZE / 2, end_x, end_y, 0x00F0F0FF);
 }
