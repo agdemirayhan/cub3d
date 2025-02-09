@@ -41,11 +41,12 @@ typedef struct s_game
 	int			window_height;
 	int			posx;
 	int			posy;
+	double		angle;
 }				t_game;
 
 void			draw_grid(mlx_image_t *img, t_game *game);
-t_map			*parse_map(const char *filename);
-char			**parse_grid(int fd, char *line);
+t_map			*parse_map(const char *filename, t_game *game);
+char			**parse_grid(int fd, char *line, t_game *game);
 void			parse_textures(char *line, t_map *map);
 int				parse_color(char *line, int *r, int *g, int *b);
 void			free_map(t_map *map);
