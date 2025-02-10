@@ -72,8 +72,8 @@ char	**parse_grid(int fd, char *line, t_game *game)
 			if (grid[i][j] == 'N' || grid[i][j] == 'S' || grid[i][j] == 'E'
 				|| grid[i][j] == 'W')
 			{
-				game->posx = j * SQUARE_SIZE;
-				game->posy = i * SQUARE_SIZE;
+				game->posx = j * SQUARE_SIZE + (SQUARE_SIZE / 2 - 10 / 2);
+				game->posy = i * SQUARE_SIZE + (SQUARE_SIZE / 2 - 10 / 2);
 				grid[i][j] = '0';
 			}
 			j++;
@@ -242,8 +242,7 @@ void	draw_grid(mlx_image_t *img, t_game *game)
 		}
 		y++;
 	}
-	draw_rectangle(img, game->posx, game->posy, 10,
-		10, 0xFF0000FF);
+	draw_rectangle(img, game->posx, game->posy, 10, 10, 0xFF0000FF);
 	line_length = 100;
 	end_x = game->posx * SQUARE_SIZE + SQUARE_SIZE / 2 + line_length
 		* cos(game->angle);
