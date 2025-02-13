@@ -72,8 +72,10 @@ char	**parse_grid(int fd, char *line, t_game *game)
 			if (grid[i][j] == 'N' || grid[i][j] == 'S' || grid[i][j] == 'E'
 				|| grid[i][j] == 'W')
 			{
-				game->posx = j * SQUARE_SIZE + (SQUARE_SIZE / 2 - 10 / 2);
-				game->posy = i * SQUARE_SIZE + (SQUARE_SIZE / 2 - 10 / 2);
+				// game->posx = j * SQUARE_SIZE + (SQUARE_SIZE / 2 - 10 / 2);
+				// game->posy = i * SQUARE_SIZE + (SQUARE_SIZE / 2 - 10 / 2);
+				game->posx = j * SQUARE_SIZE ;
+				game->posy = i * SQUARE_SIZE;
 				grid[i][j] = '0';
 			}
 			j++;

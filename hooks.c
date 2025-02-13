@@ -42,36 +42,28 @@ void	move(t_game *game, int dy, int dx)
 {
 	int	new_posy;
 	int	new_posx;
+	int	step;
 
-	if (!game || !game->map.grid)
+	step = 5; // Start with max step size
+	while (step > 0)
 	{
-		printf("Error: game or game->map.grid is NULL\n");
-		fflush(stdout);
-		return ;
+		new_posy = game->posy + (dy * step);
+		new_posx = game->posx + (dx * step);
+		printf("Trying to move to: (%d, %d) with step %d\n", new_posx, new_posy,
+			step);
+		if ((game->map.grid[new_posy / SQUARE_SIZE][new_posx
+				/ SQUARE_SIZE] == '0') && (game->map.grid[(new_posy + step + 8)
+				/ SQUARE_SIZE][(new_posx + step + 8) / SQUARE_SIZE] == '0'))
+		{
+			game->posy = new_posy;
+			game->posx = new_posx;
+			printf("Moved to: (%d, %d)\n", game->posx, game->posy);
+			return ; // Exit after successful move
+		}
+		step--; // Reduce step size if blocked
 	}
-	new_posy = game->posy + dy;
-	new_posx = game->posx + dx;
-	printf("Current Position: (%d, %d)\n", game->posy, game->posx);
-	printf("Trying to Move to: (%d, %d)\n", new_posy, new_posx);
-	// Bounds checking
-	if (new_posy < 0 || new_posx < 0 || !game->map.grid[new_posy]
-		|| !game->map.grid[new_posy][new_posx])
-	{
-		printf("Move out of bounds! Skipping move.\n");
-		fflush(stdout);
-		return ;
-	}
-	if (game->map.grid[new_posy / 42][new_posx / 42] == '0')
-	{
-		game->posy = new_posy;
-		game->posx = new_posx;
-		printf("Moved to: (%d, %d)\n", game->posy, game->posx);
-	}
-	else
-	{
-		printf("Blocked by wall or object!\n");
-	}
-	fflush(stdout);
+	printf("Movement completely blocked at: (%d, %d)\n", game->posx,
+		game->posy);
 }
 
 void	move_up(t_game *game)

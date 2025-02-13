@@ -14,7 +14,7 @@ void	game_loop(void *param)
 	// Refresh screen
 	put_image_in_map(game);
 	// Debug print
-	printf("Game loop running...\n");
+	// printf("Game loop running...\n");
 	fflush(stdout);
 }
 
