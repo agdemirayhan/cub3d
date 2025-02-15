@@ -59,5 +59,6 @@ void				calculate_grid_size(t_map *map, int *grid_width,
 						int *grid_height);
 void				keyhook(mlx_key_data_t keydata, void *param);
 void				put_image_in_map(t_game *game);
+void	draw_3d_view(mlx_image_t *img, t_game *game);
 
 #endif

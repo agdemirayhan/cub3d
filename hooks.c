@@ -10,6 +10,7 @@ void	put_image_in_map(t_game *game)
 		return ;
 	}
 	draw_grid(game->img, game);
+	// draw_3d_view(game->img, game);
 	mlx_image_to_window(game->mlx, game->img, 0, 0);
 }
 
