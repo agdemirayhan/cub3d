@@ -245,11 +245,10 @@ void	draw_grid(mlx_image_t *img, t_game *game)
 		y++;
 	}
 	draw_rectangle(img, game->posx, game->posy, 10, 10, 0xFF0000FF);
-	line_length = 100;
-	end_x = game->posx * SQUARE_SIZE + SQUARE_SIZE / 2 + line_length
+	line_length = 25;
+	end_x = game->posx + 10 / 2 + line_length
 		* cos(game->angle);
-	end_y = game->posy * SQUARE_SIZE + SQUARE_SIZE / 2 + line_length
+	end_y = game->posy + 10 / 2 + line_length
 		* sin(game->angle);
-	// draw_line(img, game->posx * SQUARE_SIZE + SQUARE_SIZE / 2, game->posy
-	// 	* SQUARE_SIZE + SQUARE_SIZE / 2, end_x, end_y, 0x00F0F0FF);
+	draw_line(img, game->posx + 10 / 2, game->posy + 10 / 2, end_x, end_y, 0x00F0F0FF);
 }

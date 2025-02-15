@@ -10,6 +10,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <math.h>
+# define PI 3.1415926535
 
 # ifndef SQUARE_SIZE
 #  define SQUARE_SIZE 42
