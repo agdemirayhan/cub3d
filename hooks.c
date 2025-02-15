@@ -42,28 +42,13 @@ void	move(t_game *game, int dy, int dx)
 {
 	int	new_posy;
 	int	new_posx;
-	int	step;
 
-	step = 5; // Start with max step size
-	while (step > 0)
-	{
-		new_posy = game->posy + (dy * step);
-		new_posx = game->posx + (dx * step);
-		printf("Trying to move to: (%d, %d) with step %d\n", new_posx, new_posy,
-			step);
-		if ((game->map.grid[new_posy / SQUARE_SIZE][new_posx
-				/ SQUARE_SIZE] == '0') && (game->map.grid[(new_posy + step + 8)
-				/ SQUARE_SIZE][(new_posx + step + 8) / SQUARE_SIZE] == '0'))
-		{
-			game->posy = new_posy;
-			game->posx = new_posx;
-			printf("Moved to: (%d, %d)\n", game->posx, game->posy);
-			return ; // Exit after successful move
-		}
-		step--; // Reduce step size if blocked
-	}
-	printf("Movement completely blocked at: (%d, %d)\n", game->posx,
-		game->posy);
+	new_posy = game->posy + (dy * 5);
+	new_posx = game->posx + (dx * 5);
+	game->posy = new_posy;
+	game->posx = new_posx;
+	printf("Moved to: (%d, %d)\n", game->posx, game->posy);
+	return ; // Exit after successful move
 }
 
 void	move_up(t_game *game)
