@@ -99,9 +99,21 @@ void	keyhook(mlx_key_data_t keydata, void *param)
 		if (keydata.key == MLX_KEY_D)
 			move_right(game);
 		if (keydata.key == MLX_KEY_LEFT)
-			game->angle -= 0.1;
+		{
+			game->angle -= PI / 32;
+			if (game->angle < 0)
+				game->angle += 2 * PI;
+			printf("game->angle: %f\n", game->angle);
+			fflush(stdout);
+		}
 		if (keydata.key == MLX_KEY_RIGHT)
-			game->angle += 0.1;
+		{
+			game->angle += PI / 32;
+			if (game->angle > 2 * PI)
+				game->angle -= 2 * PI;
+			printf("game->angle: %f\n", game->angle);
+			fflush(stdout);
+		}
 		// if (game->status == END)
 		// {
 		// 	ft_printf("Congratulations!\n");
