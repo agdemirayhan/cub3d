@@ -1,30 +1,5 @@
 #include "cub3d.h"
 
-// void	player_to_window(t_game *game, int x, int y)
-// {
-// 	mlx_image_to_window(game->mlx, game->assets.terrain, x * TILESIZE, y
-// 			* TILESIZE);
-// 	if (game->map[y][x] == '1')
-// 		mlx_image_to_window(game->mlx, game->assets.wall, x * TILESIZE, y
-// 				* TILESIZE);
-// 	else if (game->map[y][x] == 'E')
-// 		mlx_image_to_window(game->mlx, game->assets.hut, x * TILESIZE, y
-// 				* TILESIZE);
-// 	else if (game->map[y][x] == 'P')
-// 		mlx_image_to_window(game->mlx, game->assets.lumberjack, x * TILESIZE, y
-// 				* TILESIZE);
-// 	else if (game->map[y][x] == 'X')
-// 	{
-// 		mlx_image_to_window(game->mlx, game->assets.hut, x * TILESIZE, y
-// 				* TILESIZE);
-// 		mlx_image_to_window(game->mlx, game->assets.lumberjack, x * TILESIZE, y
-// 				* TILESIZE);
-// 	}
-// 	else if (game->map[y][x] == 'C')
-// 		mlx_image_to_window(game->mlx, game->assets.tree, x * TILESIZE, y
-// 				* TILESIZE);
-// }
-
 void	put_image_in_map(t_game *game)
 {
 	// int x;
