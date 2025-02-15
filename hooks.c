@@ -1,30 +1,5 @@
 #include "cub3d.h"
 
-// void	player_to_window(t_game *game, int x, int y)
-// {
-// 	mlx_image_to_window(game->mlx, game->assets.terrain, x * TILESIZE, y
-// 			* TILESIZE);
-// 	if (game->map[y][x] == '1')
-// 		mlx_image_to_window(game->mlx, game->assets.wall, x * TILESIZE, y
-// 				* TILESIZE);
-// 	else if (game->map[y][x] == 'E')
-// 		mlx_image_to_window(game->mlx, game->assets.hut, x * TILESIZE, y
-// 				* TILESIZE);
-// 	else if (game->map[y][x] == 'P')
-// 		mlx_image_to_window(game->mlx, game->assets.lumberjack, x * TILESIZE, y
-// 				* TILESIZE);
-// 	else if (game->map[y][x] == 'X')
-// 	{
-// 		mlx_image_to_window(game->mlx, game->assets.hut, x * TILESIZE, y
-// 				* TILESIZE);
-// 		mlx_image_to_window(game->mlx, game->assets.lumberjack, x * TILESIZE, y
-// 				* TILESIZE);
-// 	}
-// 	else if (game->map[y][x] == 'C')
-// 		mlx_image_to_window(game->mlx, game->assets.tree, x * TILESIZE, y
-// 				* TILESIZE);
-// }
-
 void	put_image_in_map(t_game *game)
 {
 	// int x;
@@ -35,6 +10,7 @@ void	put_image_in_map(t_game *game)
 		return ;
 	}
 	draw_grid(game->img, game);
+	// draw_3d_view(game->img, game);
 	mlx_image_to_window(game->mlx, game->img, 0, 0);
 }
 
@@ -99,9 +75,21 @@ void	keyhook(mlx_key_data_t keydata, void *param)
 		if (keydata.key == MLX_KEY_D)
 			move_right(game);
 		if (keydata.key == MLX_KEY_LEFT)
-			game->angle -= 0.1;
+		{
+			game->angle -= PI / 32;
+			if (game->angle < 0)
+				game->angle += 2 * PI;
+			printf("game->angle: %f\n", game->angle);
+			fflush(stdout);
+		}
 		if (keydata.key == MLX_KEY_RIGHT)
-			game->angle += 0.1;
+		{
+			game->angle += PI / 32;
+			if (game->angle > 2 * PI)
+				game->angle -= 2 * PI;
+			printf("game->angle: %f\n", game->angle);
+			fflush(stdout);
+		}
 		// if (game->status == END)
 		// {
 		// 	ft_printf("Congratulations!\n");

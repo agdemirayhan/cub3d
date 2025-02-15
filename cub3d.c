@@ -12,7 +12,8 @@ void	game_loop(void *param)
 		keyhook(game->last_key_data, game);
 	}
 	// Refresh screen
-	put_image_in_map(game);
+	// draw_3d_view(game->img, game);
+	// put_image_in_map(game);
 	// Debug print
 	// printf("Game loop running...\n");
 	fflush(stdout);

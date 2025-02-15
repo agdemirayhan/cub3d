@@ -10,9 +10,13 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# define PI 3.1415926535
+# define DR (M_PI / 180)   // Convert degrees to radians
+# define P2 (M_PI / 2)     // 90 degrees
+# define P3 (3 * M_PI / 2) // 270 degrees
 
 # ifndef SQUARE_SIZE
-#  define SQUARE_SIZE 42
+#  define SQUARE_SIZE 64
 # endif
 
 typedef struct s_map
@@ -54,6 +58,7 @@ void				free_map(t_map *map);
 void				calculate_grid_size(t_map *map, int *grid_width,
 						int *grid_height);
 void				keyhook(mlx_key_data_t keydata, void *param);
-void	put_image_in_map(t_game *game);
+void				put_image_in_map(t_game *game);
+void	draw_3d_view(mlx_image_t *img, t_game *game);
 
 #endif
