@@ -214,7 +214,6 @@ void	draw_line(mlx_image_t *img, int x0, int y0, int x1, int y1,
 	}
 }
 
-
 void	draw_grid(mlx_image_t *img, t_game *game)
 {
 	int x;
@@ -244,21 +243,55 @@ void	draw_grid(mlx_image_t *img, t_game *game)
 		y++;
 	}
 	draw_rectangle(img, game->posx, game->posy, 16, 16, 0xFF0000FF);
-	line_length = 25;
-	end_x = game->posx + 16 / 2 + line_length * cos(game->angle);
-	end_y = game->posy + 16 / 2 + line_length * sin(game->angle);
+
+	double temp_angle = game->angle - PI / 6;
+
+	while (temp_angle <= game->angle + PI / 6)
+	{
+		line_length = 0;
+		end_x = game->posx + 16 / 2 + line_length * cos(temp_angle);
+		end_y = game->posy + 16 / 2 + line_length * sin(temp_angle);
+		while (game->map.grid[(end_y) / SQUARE_SIZE][(end_x)
+			/ SQUARE_SIZE] == '0')
+		{
+			// printf("line_length:%d\n", line_length);
+			line_length++;
+			end_x = game->posx + 16 / 2 + line_length * cos(temp_angle);
+			end_y = game->posy + 16 / 2 + line_length * sin(temp_angle);
+		}
+		draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
+			0x00F0F0FF);
+		temp_angle = temp_angle + PI / 256;
+	}
+
 	// printf("end_x:%d\n", end_x);
 	// printf("end_y:%d\n", end_y);
 	// printf("game->map.grid[end_y][end_x]:%c\n", game->map.grid[end_y
-		// / SQUARE_SIZE][end_x / SQUARE_SIZE]);
-	while (game->map.grid[end_y / SQUARE_SIZE][end_x / SQUARE_SIZE] == '0')
-	{
-		printf("line_length:%d\n", line_length);
-		line_length++;
-		end_x = game->posx + 16 / 2 + line_length * cos(game->angle);
-		end_y = game->posy + 16 / 2 + line_length * sin(game->angle);
-	}
-	draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
-		0x00F0F0FF);
-	// drawRays3D(game);
+	// / SQUARE_SIZE][end_x / SQUARE_SIZE]);
+
+	// CALISAN KOD
+	// while (game->map.grid[(end_y) / SQUARE_SIZE][(end_x)
+	// / SQUARE_SIZE] == '0')
+	// {
+	// 	// printf("line_length:%d\n", line_length);
+	// 	line_length++;
+	// 	end_x = game->posx + 16 / 2 + line_length * cos(game->angle);
+	// 	end_y = game->posy + 16 / 2 + line_length * sin(game->angle);
+	// }
+	// draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
+	// 	0x00F0F0FF);
+	// double temp_angle = game->angle - PI / 6;
+	// line_length = 0;
+	// end_x = game->posx + 16 / 2 + line_length * cos(temp_angle);
+	// end_y = game->posy + 16 / 2 + line_length * sin(temp_angle);
+	// while (game->map.grid[(end_y) / SQUARE_SIZE][(end_x)
+	// / SQUARE_SIZE] == '0')
+	// {
+	// 	// printf("line_length:%d\n", line_length);
+	// 	line_length++;
+	// 	end_x = game->posx + 16 / 2 + line_length * cos(temp_angle);
+	// 	end_y = game->posy + 16 / 2 + line_length * sin(temp_angle);
+	// }
+	// draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
+	// 	0x00F0F0FF);
 }
