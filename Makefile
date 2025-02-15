@@ -8,16 +8,27 @@ GNL := ./get_next_line
 HEADERS := -I ./include -I $(MLX_DIR)/include -I $(LIBFT)/include -I $(GNL)/include
 LIBS := $(MLX_DIR)/build/libmlx42.a $(LIBFT)/libft.a $(GNL)/get_next_line.a -ldl -lglfw -pthread -lm
 
-SRCS := cub3d.c map_utils.c
+SRCS := cub3d.c map_utils.c hooks.c
 OBJS := $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
-RM := rm
+RM := rm -rf
 CC := cc
 MAKE := make
-MAKE_DIR := mkdir
+MKDIR := mkdir -p
 
-CFLAGS := -Wall -Wextra -Werror
+# CFLAGS := -Wall -Wextra -Werror -fsanitize=address
+CFLAGS := -fsanitize=address
 LIB_FLAGS := -framework Cocoa -framework OpenGL -framework IOKit $(LIBS) -g
+
+# Detect Homebrew GLFW installation
+BREW_GLFW := $(shell brew --prefix glfw 2>/dev/null)
+ifeq ($(BREW_GLFW),)
+    $(error GLFW not found. Install it with 'brew install glfw')
+endif
+
+export LDFLAGS := -L$(BREW_GLFW)/lib
+export CPPFLAGS := -I$(BREW_GLFW)/include
+export PKG_CONFIG_PATH := $(BREW_GLFW)/lib/pkgconfig
 
 all: libmlx libft get_next_line $(NAME)
 
@@ -37,21 +48,21 @@ get_next_line:
 	@$(MAKE) -C $(GNL)
 
 $(NAME): $(OBJ_DIR) $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(HEADERS) -o $(NAME) $(LIB_FLAGS) `pkg-config --cflags --libs glfw3`
 	@echo "Successful build!"
 
 clean:
-	@$(RM) -rf $(OBJ_DIR)
-	@$(RM) -rf $(MLX_DIR)/build
+	@$(RM) $(OBJ_DIR)
+	@$(RM) $(MLX_DIR)/build
 	@$(MAKE) -C $(LIBFT) clean
 	@$(MAKE) -C $(GNL) clean
 	@echo "Bins successfully cleaned!"
 
 fclean: clean
-	@$(RM) -rf $(NAME)
+	@$(RM) $(NAME)
 	@$(MAKE) -C $(LIBFT) fclean
 	@$(MAKE) -C $(GNL) fclean
-	@$(RM) -rf $(MLX_DIR)
+	@$(RM) $(MLX_DIR)
 	@echo "Everything successfully cleaned!"
 
 re: fclean all
@@ -60,8 +71,7 @@ $(OBJ_DIR)/%.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@ $(HEADERS)
 
 $(OBJ_DIR):
-	@echo "Starting..."
-	$(MAKE_DIR) $(OBJ_DIR)
+	@echo "Creating object directory..."
+	$(MKDIR) $(OBJ_DIR)
 
 .PHONY: all clean fclean re libmlx libft get_next_line
-
