@@ -13,7 +13,7 @@ void	game_loop(void *param)
 	}
 	// Refresh screen
 	// draw_3d_view(game->img, game);
-	// put_image_in_map(game);
+	 put_image_in_map(game);
 	// Debug print
 	// printf("Game loop running...\n");
 	fflush(stdout);
@@ -52,7 +52,7 @@ int	main(int argc, char **argv)
 	}
 	game.angle = 0;
 	game.last_key_data.key = 0; // Initialize last key data
-	draw_grid(game.img, &game);
+	//draw_grid(game.img, &game);
 	mlx_image_to_window(game.mlx, game.img, 0, 0);
 	// Set up key hook and loop hook
 	mlx_key_hook(game.mlx, &keyhook, &game);

@@ -1,5 +1,23 @@
 #include "cub3d.h"
 
+void	clear_image(mlx_image_t *img, uint32_t color)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < img->height)
+	{
+		x = 0;
+		while (x < img->width)
+		{
+			mlx_put_pixel(img, x, y, color);
+			x++;
+		}
+		y++;
+	}
+}
+
 void	put_image_in_map(t_game *game)
 {
 	// int x;
@@ -9,14 +27,15 @@ void	put_image_in_map(t_game *game)
 		fprintf(stderr, "Error: game->img is NULL\n");
 		return ;
 	}
-	draw_grid(game->img, game);
-	// draw_3d_view(game->img, game);
+	//draw_grid(game->img, game);
+	clear_image(game->img, 0x000000FF);
+	draw_3d_view(game->img, game);
 	mlx_image_to_window(game->mlx, game->img, 0, 0);
 }
 
 void	move(t_game *game, double angle)
 {
-	double	move_speed = 5.0;
+	double	move_speed = 10.0;
 	int	new_posy;
 	int	new_posx;
 
