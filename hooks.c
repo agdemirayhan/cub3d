@@ -14,13 +14,17 @@ void	put_image_in_map(t_game *game)
 	mlx_image_to_window(game->mlx, game->img, 0, 0);
 }
 
-void	move(t_game *game, int dy, int dx)
+void	move(t_game *game, double angle)
 {
+	double	move_speed = 5.0;
 	int	new_posy;
 	int	new_posx;
 
-	new_posy = game->posy + (dy * 5);
-	new_posx = game->posx + (dx * 5);
+
+	new_posx = game->posx + cos(angle) * move_speed;
+	new_posy = game->posy + sin(angle) * move_speed;
+	//new_posy = game->posy + (dy * 5);
+	//new_posx = game->posx + (dx * 5);
 	game->posy = new_posy;
 	game->posx = new_posx;
 	printf("Moved to: (%d, %d)\n", game->posx, game->posy);
@@ -29,28 +33,28 @@ void	move(t_game *game, int dy, int dx)
 
 void	move_up(t_game *game)
 {
-	move(game, -1, 0);
+	move(game, game->angle);
 	printf("UP\n");
 	fflush(stdout);
 }
 
 void	move_down(t_game *game)
 {
-	move(game, 1, 0);
+	move(game, game->angle + M_PI);
 	printf("DOWN\n");
 	fflush(stdout);
 }
 
 void	move_right(t_game *game)
 {
-	move(game, 0, 1);
+	move(game, game->angle + M_PI_2);
 	printf("RIGHT\n");
 	fflush(stdout);
 }
 
 void	move_left(t_game *game)
 {
-	move(game, 0, -1);
+	move(game, game->angle - M_PI_2);
 	printf("LEFT\n");
 	fflush(stdout);
 }
