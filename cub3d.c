@@ -5,55 +5,61 @@ void	game_loop(void *param)
 {
 	t_game			*game;
 	static clock_t	last_time = 0;
+	static int		frame_count = 0;
+	static double	last_fps_update = 0;
 	clock_t			current_time;
 	double			delta_time;
-	double			adjusted_speed;
+	double			move_speed;
 
 	game = param;
 	current_time = clock();
 	delta_time = (double)(current_time - last_time) / CLOCKS_PER_SEC;
 	last_time = current_time;
-	// Adjust movement speed based on frame time (prevents slowing down)
-	adjusted_speed = MOVE_SPEED * delta_time * 60;
+	frame_count++;
+	if ((double)(current_time) / CLOCKS_PER_SEC - last_fps_update >= 0.1)
+	{
+		printf("FPS: %d\n", frame_count * 10);
+		fflush(stdout);
+		frame_count = 0;
+		last_fps_update = (double)(current_time) / CLOCKS_PER_SEC;
+	}
+	move_speed = MOVE_SPEED * delta_time * 60;
 	if (game->is_moving_up)
 	{
-		game->posx += cos(game->angle) * adjusted_speed;
-		game->posy += sin(game->angle) * adjusted_speed;
+		game->posx += cos(game->angle) * move_speed;
+		game->posy += sin(game->angle) * move_speed;
 	}
 	if (game->is_moving_down)
 	{
-		game->posx -= cos(game->angle) * adjusted_speed;
-		game->posy -= sin(game->angle) * adjusted_speed;
+		game->posx -= cos(game->angle) * move_speed;
+		game->posy -= sin(game->angle) * move_speed;
 	}
 	if (game->is_moving_left)
 	{
-		game->posx += cos(game->angle - P2) * adjusted_speed;
-		game->posy += sin(game->angle - P2) * adjusted_speed;
+		game->posx += cos(game->angle - P2) * move_speed;
+		game->posy += sin(game->angle - P2) * move_speed;
 	}
 	if (game->is_moving_right)
 	{
-		game->posx += cos(game->angle + P2) * adjusted_speed;
-		game->posy += sin(game->angle + P2) * adjusted_speed;
+		game->posx += cos(game->angle + P2) * move_speed;
+		game->posy += sin(game->angle + P2) * move_speed;
 	}
-	// Apply rotation
 	if (game->turning_left)
 	{
-		game->angle -= PI / 32;
+		game->angle -= PI / 64;
 		if (game->angle < 0)
 			game->angle += 2 * PI;
 	}
 	if (game->turning_right)
 	{
-		game->angle += PI / 32;
+		game->angle += PI / 64;
 		if (game->angle > 2 * PI)
 			game->angle -= 2 * PI;
 	}
-	// Print debug info
-	printf("Position: (%d, %d) | Angle: %f | Speed: %f\n", game->posx,
-		game->posy, game->angle, adjusted_speed);
-	fflush(stdout);
-	// Update the screen
-	put_image_in_map(game);
+	put_image_in_map(game); // This might be causing slowdowns
+	// printf("Position: (%d, %d) | Angle: %f | Speed: %f\n", game->posx,
+	// 	game->posy, game->angle, move_speed);
+	// fflush(stdout);
 }
 
 int	main(int argc, char **argv)

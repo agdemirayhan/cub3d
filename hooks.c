@@ -20,6 +20,8 @@ void	clear_image(mlx_image_t *img, uint32_t color)
 
 void	put_image_in_map(t_game *game)
 {
+	static int	first_render = 1;
+
 	if (!game->img)
 	{
 		fprintf(stderr, "Error: game->img is NULL\n");
@@ -27,7 +29,8 @@ void	put_image_in_map(t_game *game)
 	}
 	clear_image(game->img, 0x000000FF);
 	draw_3d_view(game->img, game);
-	mlx_image_to_window(game->mlx, game->img, 0, 0);
+	if (first_render)
+		mlx_image_to_window(game->mlx, game->img, 0, 0);
 }
 
 // void	move(t_game *game, double angle)
