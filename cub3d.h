@@ -11,9 +11,10 @@
 # include <stdlib.h>
 # include <unistd.h>
 # define PI 3.1415926535
-# define DR (M_PI / 180)   // Convert degrees to radians
-# define P2 (M_PI / 2)     // 90 degrees
-# define P3 (3 * M_PI / 2) // 270 degrees
+# define DR (M_PI / 180)  
+# define P2 (M_PI / 2)     
+# define P3 (3 * M_PI / 2) 
+# define MOVE_SPEED 5      
 
 # ifndef SQUARE_SIZE
 #  define SQUARE_SIZE 64
@@ -47,6 +48,13 @@ typedef struct s_game
 	int				posy;
 	double			angle;
 	mlx_key_data_t	last_key_data;
+
+	bool			is_moving_up;
+	bool			is_moving_down;
+	bool			is_moving_left;
+	bool			is_moving_right;
+	bool			turning_left;
+	bool			turning_right;
 }					t_game;
 
 void				draw_grid(mlx_image_t *img, t_game *game);
@@ -59,6 +67,10 @@ void				calculate_grid_size(t_map *map, int *grid_width,
 						int *grid_height);
 void				keyhook(mlx_key_data_t keydata, void *param);
 void				put_image_in_map(t_game *game);
-void	draw_3d_view(mlx_image_t *img, t_game *game);
+void				draw_3d_view(mlx_image_t *img, t_game *game);
+void				move_up(t_game *game);
+void				move_down(t_game *game);
+void				move_left(t_game *game);
+void				move_right(t_game *game);
 
 #endif

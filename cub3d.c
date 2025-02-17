@@ -1,22 +1,59 @@
 #include "cub3d.h"
+#include <time.h>
 
 void	game_loop(void *param)
 {
-	t_game	*game;
+	t_game			*game;
+	static clock_t	last_time = 0;
+	clock_t			current_time;
+	double			delta_time;
+	double			adjusted_speed;
 
-	game = (t_game *)param;
-	// Process stored key press
-	if (game->last_key_data.action == MLX_PRESS
-		|| game->last_key_data.action == MLX_REPEAT)
+	game = param;
+	current_time = clock();
+	delta_time = (double)(current_time - last_time) / CLOCKS_PER_SEC;
+	last_time = current_time;
+	// Adjust movement speed based on frame time (prevents slowing down)
+	adjusted_speed = MOVE_SPEED * delta_time * 60;
+	if (game->is_moving_up)
 	{
-		keyhook(game->last_key_data, game);
+		game->posx += cos(game->angle) * adjusted_speed;
+		game->posy += sin(game->angle) * adjusted_speed;
 	}
-	// Refresh screen
-	// draw_3d_view(game->img, game);
-	 put_image_in_map(game);
-	// Debug print
-	// printf("Game loop running...\n");
+	if (game->is_moving_down)
+	{
+		game->posx -= cos(game->angle) * adjusted_speed;
+		game->posy -= sin(game->angle) * adjusted_speed;
+	}
+	if (game->is_moving_left)
+	{
+		game->posx += cos(game->angle - P2) * adjusted_speed;
+		game->posy += sin(game->angle - P2) * adjusted_speed;
+	}
+	if (game->is_moving_right)
+	{
+		game->posx += cos(game->angle + P2) * adjusted_speed;
+		game->posy += sin(game->angle + P2) * adjusted_speed;
+	}
+	// Apply rotation
+	if (game->turning_left)
+	{
+		game->angle -= PI / 32;
+		if (game->angle < 0)
+			game->angle += 2 * PI;
+	}
+	if (game->turning_right)
+	{
+		game->angle += PI / 32;
+		if (game->angle > 2 * PI)
+			game->angle -= 2 * PI;
+	}
+	// Print debug info
+	printf("Position: (%d, %d) | Angle: %f | Speed: %f\n", game->posx,
+		game->posy, game->angle, adjusted_speed);
 	fflush(stdout);
+	// Update the screen
+	put_image_in_map(game);
 }
 
 int	main(int argc, char **argv)
@@ -51,10 +88,8 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	game.angle = 0;
-	game.last_key_data.key = 0; // Initialize last key data
-	//draw_grid(game.img, &game);
+	game.last_key_data.key = 0;
 	mlx_image_to_window(game.mlx, game.img, 0, 0);
-	// Set up key hook and loop hook
 	mlx_key_hook(game.mlx, &keyhook, &game);
 	mlx_loop_hook(game.mlx, &game_loop, &game);
 	mlx_loop(game.mlx);

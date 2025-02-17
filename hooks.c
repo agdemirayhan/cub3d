@@ -20,104 +20,103 @@ void	clear_image(mlx_image_t *img, uint32_t color)
 
 void	put_image_in_map(t_game *game)
 {
-	// int x;
-	// int y;
 	if (!game->img)
 	{
 		fprintf(stderr, "Error: game->img is NULL\n");
 		return ;
 	}
-	//draw_grid(game->img, game);
 	clear_image(game->img, 0x000000FF);
 	draw_3d_view(game->img, game);
 	mlx_image_to_window(game->mlx, game->img, 0, 0);
 }
 
-void	move(t_game *game, double angle)
-{
-	double	move_speed = 10.0;
-	int	new_posy;
-	int	new_posx;
+// void	move(t_game *game, double angle)
+// {
+// 	double	move_speed;
+// 	int		new_posy;
+// 	int		new_posx;
 
+// 	move_speed = 10.0;
+// 	new_posx = game->posx + cos(angle) * move_speed;
+// 	new_posy = game->posy + sin(angle) * move_speed;
+// 	game->posy = new_posy;
+// 	game->posx = new_posx;
+// 	printf("Moved to: (%d, %d)\n", game->posx, game->posy);
+// 	return ;
+// }
 
-	new_posx = game->posx + cos(angle) * move_speed;
-	new_posy = game->posy + sin(angle) * move_speed;
-	//new_posy = game->posy + (dy * 5);
-	//new_posx = game->posx + (dx * 5);
-	game->posy = new_posy;
-	game->posx = new_posx;
-	printf("Moved to: (%d, %d)\n", game->posx, game->posy);
-	return ; // Exit after successful move
-}
+#include "cub3d.h"
+#include <stdio.h> // Needed for printf
+
+#define MOVE_SPEED 5 // Movement speed per update
 
 void	move_up(t_game *game)
 {
-	move(game, game->angle);
-	printf("UP\n");
-	fflush(stdout);
+	printf("Moving up | Angle: %f\n", game->angle);
+	fflush(stdout); // Ensure output is printed immediately
+	game->posx += cos(game->angle) * MOVE_SPEED;
+	game->posy += sin(game->angle) * MOVE_SPEED;
 }
 
 void	move_down(t_game *game)
 {
-	move(game, game->angle + M_PI);
-	printf("DOWN\n");
+	printf("Moving down | Angle: %f\n", game->angle);
 	fflush(stdout);
-}
-
-void	move_right(t_game *game)
-{
-	move(game, game->angle + M_PI_2);
-	printf("RIGHT\n");
-	fflush(stdout);
+	game->posx -= cos(game->angle) * MOVE_SPEED;
+	game->posy -= sin(game->angle) * MOVE_SPEED;
 }
 
 void	move_left(t_game *game)
 {
-	move(game, game->angle - M_PI_2);
-	printf("LEFT\n");
+	printf("Moving left | Angle: %f\n", game->angle);
 	fflush(stdout);
+	game->posx += cos(game->angle - P2) * MOVE_SPEED;
+	game->posy += sin(game->angle - P2) * MOVE_SPEED;
+}
+
+void	move_right(t_game *game)
+{
+	printf("Moving right | Angle: %f\n", game->angle);
+	fflush(stdout);
+	game->posx += cos(game->angle + P2) * MOVE_SPEED;
+	game->posy += sin(game->angle + P2) * MOVE_SPEED;
 }
 
 void	keyhook(mlx_key_data_t keydata, void *param)
 {
-	t_game *game;
+	t_game	*game;
 
 	game = param;
 	if (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)
 	{
 		if (keydata.key == MLX_KEY_ESCAPE)
-		{
 			mlx_close_window(game->mlx);
-		}
 		if (keydata.key == MLX_KEY_W)
-			move_up(game);
+			game->is_moving_up = true;
 		if (keydata.key == MLX_KEY_S)
-			move_down(game);
+			game->is_moving_down = true;
 		if (keydata.key == MLX_KEY_A)
-			move_left(game);
+			game->is_moving_left = true;
 		if (keydata.key == MLX_KEY_D)
-			move_right(game);
+			game->is_moving_right = true;
 		if (keydata.key == MLX_KEY_LEFT)
-		{
-			game->angle -= PI / 32;
-			if (game->angle < 0)
-				game->angle += 2 * PI;
-			printf("game->angle: %f\n", game->angle);
-			fflush(stdout);
-		}
+			game->turning_left = true;
 		if (keydata.key == MLX_KEY_RIGHT)
-		{
-			game->angle += PI / 32;
-			if (game->angle > 2 * PI)
-				game->angle -= 2 * PI;
-			printf("game->angle: %f\n", game->angle);
-			fflush(stdout);
-		}
-		// if (game->status == END)
-		// {
-		// 	ft_printf("Congratulations!\n");
-		// 	mlx_close_window(game->mlx);
-		// }
+			game->turning_right = true;
 	}
-	put_image_in_map(game);
+	if (keydata.action == MLX_RELEASE)
+	{
+		if (keydata.key == MLX_KEY_W)
+			game->is_moving_up = false;
+		if (keydata.key == MLX_KEY_S)
+			game->is_moving_down = false;
+		if (keydata.key == MLX_KEY_A)
+			game->is_moving_left = false;
+		if (keydata.key == MLX_KEY_D)
+			game->is_moving_right = false;
+		if (keydata.key == MLX_KEY_LEFT)
+			game->turning_left = false;
+		if (keydata.key == MLX_KEY_RIGHT)
+			game->turning_right = false;
+	}
 }
