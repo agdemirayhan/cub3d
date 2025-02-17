@@ -33,30 +33,10 @@ void	put_image_in_map(t_game *game)
 		mlx_image_to_window(game->mlx, game->img, 0, 0);
 }
 
-// void	move(t_game *game, double angle)
-// {
-// 	double	move_speed;
-// 	int		new_posy;
-// 	int		new_posx;
-
-// 	move_speed = 10.0;
-// 	new_posx = game->posx + cos(angle) * move_speed;
-// 	new_posy = game->posy + sin(angle) * move_speed;
-// 	game->posy = new_posy;
-// 	game->posx = new_posx;
-// 	printf("Moved to: (%d, %d)\n", game->posx, game->posy);
-// 	return ;
-// }
-
-#include "cub3d.h"
-#include <stdio.h> // Needed for printf
-
-#define MOVE_SPEED 5 // Movement speed per update
-
 void	move_up(t_game *game)
 {
 	printf("Moving up | Angle: %f\n", game->angle);
-	fflush(stdout); // Ensure output is printed immediately
+	fflush(stdout);
 	game->posx += cos(game->angle) * MOVE_SPEED;
 	game->posy += sin(game->angle) * MOVE_SPEED;
 }
