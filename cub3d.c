@@ -4,6 +4,7 @@
 void	game_loop(void *param)
 {
 	t_game			*game;
+	// t_game_ray		*param;
 	static clock_t	last_time = 0;
 	static int		frame_count = 0;
 	static double	last_fps_update = 0;
@@ -11,6 +12,9 @@ void	game_loop(void *param)
 	double			delta_time;
 	double			move_speed;
 
+	param = ft_calloc(1, sizeof(t_game));
+	if (!game)
+		return ;
 	game = param;
 	current_time = clock();
 	delta_time = (double)(current_time - last_time) / CLOCKS_PER_SEC;
@@ -23,7 +27,7 @@ void	game_loop(void *param)
 		frame_count = 0;
 		last_fps_update = (double)(current_time) / CLOCKS_PER_SEC;
 	}
-	move_speed = MOVE_SPEED * delta_time * 60;
+	move_speed = MOVE_SPEED;
 	if (game->is_moving_up)
 	{
 		game->posx += cos(game->angle) * move_speed;
@@ -56,10 +60,8 @@ void	game_loop(void *param)
 		if (game->angle > 2 * PI)
 			game->angle -= 2 * PI;
 	}
-	put_image_in_map(game); // This might be causing slowdowns
-	// printf("Position: (%d, %d) | Angle: %f | Speed: %f\n", game->posx,
-	// 	game->posy, game->angle, move_speed);
-	// fflush(stdout);
+	// put_image_in_map(game);
+	// free(param);
 }
 
 int	main(int argc, char **argv)
@@ -80,26 +82,26 @@ int	main(int argc, char **argv)
 	calculate_grid_size(&game.map, &game.grid_width, &game.grid_height);
 	game.window_width = game.grid_width * SQUARE_SIZE;
 	game.window_height = game.grid_height * SQUARE_SIZE;
-	game.mlx = mlx_init(game.window_width, game.window_height, "Cub3D", false);
-	if (!game.mlx)
-	{
-		free_map(&game.map);
-		return (1);
-	}
-	game.img = mlx_new_image(game.mlx, game.window_width, game.window_height);
-	if (!game.img)
-	{
-		mlx_terminate(game.mlx);
-		free_map(&game.map);
-		return (1);
-	}
+	// game.mlx = mlx_init(game.window_width, game.window_height, "Cub3D", false);
+	// if (!game.mlx)
+	// {
+	// 	free_map(&game.map);
+	// 	return (1);
+	// }
+	// game.img = mlx_new_image(game.mlx, game.window_width, game.window_height);
+	// if (!game.img)
+	// {
+	// 	// mlx_terminate(game.mlx);
+	// 	free_map(&game.map);
+	// 	return (1);
+	// }
 	game.angle = 0;
-	game.last_key_data.key = 0;
-	mlx_image_to_window(game.mlx, game.img, 0, 0);
-	mlx_key_hook(game.mlx, &keyhook, &game);
-	mlx_loop_hook(game.mlx, &game_loop, &game);
-	mlx_loop(game.mlx);
-	mlx_terminate(game.mlx);
+	// game.last_key_data.key = 0;
+	// mlx_image_to_window(game.mlx, game.img, 0, 0);
+	// mlx_key_hook(game.mlx, &keyhook, &game);
+	// mlx_loop_hook(game.mlx, &game_loop, &game);
+	// mlx_loop(game.mlx);
+	// mlx_terminate(game.mlx);
 	free_map(&game.map);
 	return (0);
 }
