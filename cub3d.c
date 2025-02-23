@@ -13,6 +13,8 @@ void	game_loop(void *param)
 
 	game = param;
 	current_time = clock();
+	if (last_time == 0)
+		last_time = current_time;
 	delta_time = (double)(current_time - last_time) / CLOCKS_PER_SEC;
 	last_time = current_time;
 	frame_count++;
@@ -95,6 +97,12 @@ int	main(int argc, char **argv)
 	}
 	game.angle = 0;
 	game.last_key_data.key = 0;
+	game.turning_left = false;
+	game.turning_right = false;
+	game.is_moving_right = false;
+	game.is_moving_left = false;
+	game.is_moving_up = false;
+	game.is_moving_down = false;
 	mlx_image_to_window(game.mlx, game.img, 0, 0);
 	mlx_key_hook(game.mlx, &keyhook, &game);
 	mlx_loop_hook(game.mlx, &game_loop, &game);
