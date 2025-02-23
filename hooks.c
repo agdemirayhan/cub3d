@@ -30,7 +30,10 @@ void	put_image_in_map(t_game *game)
 	clear_image(game->img, 0x000000FF);
 	draw_3d_view(game->img, game);
 	if (first_render)
+	{
 		mlx_image_to_window(game->mlx, game->img, 0, 0);
+		first_render = 0;
+	}
 }
 
 void	move_up(t_game *game)
