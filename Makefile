@@ -1,14 +1,15 @@
 SRCS_LIST = cub3d.c hooks.c map_utils.c
 
 SRCS = $(SRCS_LIST)
-OBJDIR = objs/
-OBJS = $(addprefix $(OBJDIR), $(SRCS_LIST:.c=.o))
+OBJDIR = objs
+OBJS = $(addprefix $(OBJDIR)/, $(SRCS_LIST:.c=.o))
 
 NAME = cube3d
 
 # ------------------------------ COMPILATION ------------------------------
 CC = cc
-FLAGS =
+FLAGS = -fsanitize=address
+# FLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
 # ------------------------------ LIBRARIES ------------------------------
@@ -45,7 +46,7 @@ $(GNL_LIB):
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)
 
-$(OBJDIR)%.o: %.c | $(OBJDIR)
+$(OBJDIR)/%.o: %.c | $(OBJDIR)
 	$(CC) $(FLAGS) $(MLX_INCLUDE) $(GNL_INCLUDE) -c $< -o $@
 
 # ------------------------------ CLEAN RULES ------------------------------

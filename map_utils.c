@@ -87,75 +87,98 @@ char	**parse_grid(int fd, char *line, t_game *game)
 	return (grid);
 }
 
-t_map	*parse_map(const char *filename, t_game *game)
+void	*parsing(char *argv, t_data *data, t_game *game)
 {
-	t_map	*map;
-	char	*line;
 	int		fd;
+	int		i;
+	int		j;
+	int		h_start;
+	char	*tmp;
+	char	*line;
 
-	map = malloc(sizeof(t_map));
-	if (!map)
-		return (NULL);
-	ft_memset(map, 0, sizeof(t_map));
-	fd = open(filename, O_RDONLY);
+	fd = open(argv, O_RDONLY);
+	printf("here: %s\n", argv);
 	if (fd < 0)
-		return (NULL);
-	line = get_next_line(fd);
-	while (line)
+		return (printf("fd fails\n"), NULL);
+	data->mlx.mlx_ptr = mlx_init();
+	game->map_h = 0;
+	h_start = 0;
+	tmp = get_next_line(fd);
+	while (tmp != NULL)
 	{
-		if (ft_strncmp(line, "F ", 2) == 0)
-			parse_color(&line[2], &map->floor_r, &map->floor_g, &map->floor_b);
-		else if (ft_strncmp(line, "C ", 2) == 0)
-			parse_color(&line[2], &map->ceiling_r, &map->ceiling_g,
-				&map->ceiling_b);
-		else if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO",
-				2) == 0 || ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line,
-				"EA", 2) == 0)
-			parse_textures(line, map);
-		else if (line[0] == ' ' || line[0] == '1')
+		i = 0;
+		while (tmp[i] == ' ' || tmp[i] == '\t')
+			i++;
+		if (tmp[i] != '\0')
 		{
-			map->grid = parse_grid(fd, line, game);
-			break ;
+			if (tmp[i] == '1')
+			{
+				j = ft_strlen(tmp) - 1;
+				while (j >= 0 && (tmp[j] == ' ' || tmp[j] == '\t'
+						|| tmp[j] == '\n'))
+					j--;
+				if (j >= 0 && tmp[j] == '1')
+					h_start = 1;
+			}
+		}
+		if (h_start)
+			game->map_h++;
+		free(tmp);
+		tmp = get_next_line(fd);
+	}
+	close(fd);
+	printf("game->map_h: %d\n", game->map_h);
+	fd = open(argv, O_RDONLY);
+	if (fd < 0)
+		return (printf("fd fails on second open\n"), NULL);
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		i = 0;
+		while (line[i] == ' ' || line[i] == '\t')
+			i++;
+		if (line[i] != '\0' && line[i] == '1')
+		{
+			j = ft_strlen(line) - 1;
+			while (j >= 0 && (line[j] == ' ' || line[j] == '\t'
+					|| line[j] == '\n'))
+				j--;
+			if (j >= 0 && line[j] == '1')
+				break ;
 		}
 		free(line);
+	}
+	game->map_comp = (char **)malloc(sizeof(char *) * game->map_h);
+	if (!game->map_comp)
+	{
+		close(fd);
+		return (printf("malloc map_comp fails\n"), NULL);
+	}
+	i = 0;
+	while (i < game->map_h && line != NULL)
+	{
+		game->map_comp[i] = malloc(1000);
+		if (!game->map_comp[i])
+			return (printf("malloc map_comp[%d] fails\n", i), NULL);
+		ft_memcpy(game->map_comp[i], line, ft_strlen(line) + 1);
+		if (game->map_comp[i][ft_strlen(line) - 1] == '\n')
+			game->map_comp[i][ft_strlen(line) - 1] = '\0';
+		free(line);
+		i++;
 		line = get_next_line(fd);
 	}
 	close(fd);
-	return (map);
+	game->map_l = ft_strlen(game->map_comp[0]);
+	i = 0;
+	while (i < game->map_h)
+	{
+		if (game->map_l < ft_strlen(game->map_comp[i]))
+			game->map_l = ft_strlen(game->map_comp[i]);
+		i++;
+	}
+	return (NULL);
 }
 
-// void	draw_rectangle(mlx_image_t *img, int x, int y, int width, int height,
-// 		uint32_t color)
-// {
-// 	int	i;
-// 	int	j;
-// 	int	px;
-// 	int	py;
-
-// 	i = 0;
-// 	while (i < height)
-// 	{
-// 		j = 0;
-// 		while (j < width)
-// 		{
-// 			px = x + j;
-// 			py = y + i;
-// 			if (px >= 0 && px < (int)img->width && py >= 0
-// 				&& py < (int)img->height)
-// 			{
-// 				mlx_put_pixel(img, px, py, color);
-// 			}
-// 			if ((px % SQUARE_SIZE == 0) || (py % SQUARE_SIZE == 0))
-// 			{
-// 				mlx_put_pixel(img, px, py, 0xFFFFFFFF);
-// 			}
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }
-
-void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
+	void calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 {
 	int	width;
 	int	height;
@@ -306,7 +329,8 @@ void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 // 		}
 // 		draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
 // 			0x00F0F0FF);
-// 		// draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
+// 		// draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x,
+// end_y,
 // 		// 	0x00F0F0FF);
 
 // 		temp_angle = temp_angle + PI / 256;
