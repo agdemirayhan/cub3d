@@ -17,7 +17,7 @@ MLX_DIR = minilibx
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX_INCLUDE = -I$(MLX_DIR)
 
-GNL_DIR = get_next_line
+GNL_DIR = libft
 GNL_LIB = $(GNL_DIR)/get_next_line.a
 GNL_INCLUDE = -I$(GNL_DIR)
 
