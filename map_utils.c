@@ -87,13 +87,81 @@ char	**parse_grid(int fd, char *line, t_game *game)
 	return (grid);
 }
 
-int	init_window_and_map(t_data *data, t_game *game)
+int	allocate_map_memory(t_data *data, t_game *game)
 {
-
+	unsigned int i, j;
+	data->map_int = malloc(sizeof(int *) * game->map_h);
+	if (!data->map_int)
+		return (1);
+	for (i = 0; i < game->map_h; i++)
+	{
+		data->map_int[i] = malloc(sizeof(int) * game->map_l);
+		// if (!data->map_int[i])
+		// 	return free map
+		for (j = 0; j < game->map_l; j++)
+			data->map_int[i][j] = -1;
+	}
+	return (0);
 }
 
-	// TEMP printer
-	void print_map_comp(t_game *game)
+void	convert_map_to_int(t_data *data, t_game *game)
+{
+	unsigned int	i;
+	unsigned int	j;
+
+	i = 0;
+	while (i < game->map_h)
+	{
+		j = 0;
+		while (game->map_comp[i][j])
+		{
+			if (game->map_comp[i][j] == '0' || game->map_comp[i][j] == '1')
+				data->map_int[i][j] = game->map_comp[i][j] - '0';
+			else
+				data->map_int[i][j] = -1;
+			j++;
+		}
+		i++;
+	}
+}
+
+void	print_map_int(t_data *data, t_game *game)
+{
+	unsigned int i, j;
+	printf("Map Integer Representation:\n");
+	for (i = 0; i < game->map_h; i++)
+	{
+		for (j = 0; j < game->map_l; j++)
+		{
+			printf("%d ", data->map_int[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+int	init_window_and_map(t_data *data, t_game *game)
+{
+	data->mlx.win_ptr = mlx_new_window(data->mlx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT,
+			"cub3d");
+	if (!data->mlx.win_ptr)
+		return (1);
+	data->img = mlx_new_image(data->mlx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+	if (!data->img)
+		return (1);
+	data->addr = (int *)mlx_get_data_addr(data->img, &data->bits_per_pixel,
+			&data->line_length, &data->endian);
+	data->minimap.map_width = game->map_l;
+	data->minimap.map_height = game->map_h;
+	// Allocate and convert the map
+	if (allocate_map_memory(data, game))
+		return (1);
+	convert_map_to_int(data, game);
+	print_map_int(data, game);
+	return (0);
+}
+
+// TEMP printer
+void	print_map_comp(t_game *game)
 {
 	int	i;
 

@@ -67,45 +67,21 @@ void	game_loop(void *param)
 int	main(int argc, char **argv)
 {
 	t_game	game;
-	t_data	data;
+	t_data	*data;
 
 	if (argc != 2)
 	{
 		printf("WRONG! use: ./cub3d <map_file>\n");
 		return (1);
 	}
-	parsing(argv[1], &data, &game);
-	// init_window_and_map(&data, &game);
-		// if (!game.map.grid)
-		// {
-		// 	printf("Error parsing map file.\n");
-		// 	return (1);
-		// }
-		// calculate_grid_size(&game.map, &game.grid_width, &game.grid_height);
-		game.window_width = game.grid_width * SQUARE_SIZE;
-	game.window_height = game.grid_height * SQUARE_SIZE;
-	// game.mlx = mlx_init(game.window_width, game.window_height, "Cub3D",
-			// false);
-	// if (!game.mlx)
-	// {
-	// 	free_map(&game.map);
-	// 	return (1);
-	// }
-	// game.img = mlx_new_image(game.mlx, game.window_width,
-			// game.window_height);
-	// if (!game.img)
-	// {
-	// 	// mlx_terminate(game.mlx);
-	// 	free_map(&game.map);
-	// 	return (1);
-	// }
-	game.angle = 0;
-	// game.last_key_data.key = 0;
-	// mlx_image_to_window(game.mlx, game.img, 0, 0);
-	// mlx_key_hook(game.mlx, &keyhook, &game);
-	// mlx_loop_hook(game.mlx, &game_loop, &game);
-	// mlx_loop(game.mlx);
-	// mlx_terminate(game.mlx);
-	// free_map(&game.map);
+	data = malloc(sizeof(t_data));
+	if (!data)
+	{
+		printf("Memory allocation failed!\n");
+		return (1);
+	}
+	parsing(argv[1], data, &game);
+	init_window_and_map(data, &game);
+	free(data);
 	return (0);
 }
