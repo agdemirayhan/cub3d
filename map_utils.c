@@ -87,6 +87,28 @@ char	**parse_grid(int fd, char *line, t_game *game)
 	return (grid);
 }
 
+int	init_window_and_map(t_data *data, t_game *game)
+{
+
+}
+
+	// TEMP printer
+	void print_map_comp(t_game *game)
+{
+	int	i;
+
+	if (!game || !game->map_comp)
+	{
+		printf("Map components not initialized.\n");
+		return ;
+	}
+	printf("Printing map components (total %d lines):\n", game->map_h);
+	for (i = 0; i < game->map_h; i++)
+	{
+		printf("%s\n", game->map_comp[i]);
+	}
+}
+
 void	*parsing(char *argv, t_data *data, t_game *game)
 {
 	int		fd;
@@ -175,10 +197,11 @@ void	*parsing(char *argv, t_data *data, t_game *game)
 			game->map_l = ft_strlen(game->map_comp[i]);
 		i++;
 	}
+	print_map_comp(game);
 	return (NULL);
 }
 
-	void calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
+void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 {
 	int	width;
 	int	height;

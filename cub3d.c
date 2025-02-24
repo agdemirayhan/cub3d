@@ -4,7 +4,6 @@
 void	game_loop(void *param)
 {
 	t_game			*game;
-	// t_game_ray		*param;
 	static clock_t	last_time = 0;
 	static int		frame_count = 0;
 	static double	last_fps_update = 0;
@@ -12,6 +11,7 @@ void	game_loop(void *param)
 	double			delta_time;
 	double			move_speed;
 
+	// t_game_ray		*param;
 	param = ft_calloc(1, sizeof(t_game));
 	if (!game)
 		return ;
@@ -75,21 +75,24 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	parsing(argv[1], &data, &game);
-	// if (!game.map.grid)
-	// {
-	// 	printf("Error parsing map file.\n");
-	// 	return (1);
-	// }
-	// calculate_grid_size(&game.map, &game.grid_width, &game.grid_height);
-	game.window_width = game.grid_width * SQUARE_SIZE;
+	// init_window_and_map(&data, &game);
+		// if (!game.map.grid)
+		// {
+		// 	printf("Error parsing map file.\n");
+		// 	return (1);
+		// }
+		// calculate_grid_size(&game.map, &game.grid_width, &game.grid_height);
+		game.window_width = game.grid_width * SQUARE_SIZE;
 	game.window_height = game.grid_height * SQUARE_SIZE;
-	// game.mlx = mlx_init(game.window_width, game.window_height, "Cub3D", false);
+	// game.mlx = mlx_init(game.window_width, game.window_height, "Cub3D",
+			// false);
 	// if (!game.mlx)
 	// {
 	// 	free_map(&game.map);
 	// 	return (1);
 	// }
-	// game.img = mlx_new_image(game.mlx, game.window_width, game.window_height);
+	// game.img = mlx_new_image(game.mlx, game.window_width,
+			// game.window_height);
 	// if (!game.img)
 	// {
 	// 	// mlx_terminate(game.mlx);
