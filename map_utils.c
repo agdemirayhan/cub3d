@@ -197,7 +197,8 @@ void	draw_line(mlx_image_t *img, int x0, int y0, int x1, int y1,
 		sy = -1;
 	while (1)
 	{
-		mlx_put_pixel(img, x0, y0, color);
+		if (x0 >= 0 && x0 < (int)img->width && y0 >= 0 && y0 < (int)img->height)
+			mlx_put_pixel(img, x0, y0, color);
 		if (x0 == x1 && y0 == y1)
 			break ;
 		e2 = err * 2;
@@ -255,7 +256,8 @@ void	draw_3d_view(mlx_image_t *img, t_game *game)
 		if (end_y > game->window_height)
 			end_y = game->window_height;
 		// Draw the vertical line for the current ray
-		draw_line(img, x, start_y, x, end_y, 0xFFFFFF);
+		if (x >= 0 && x < (int)img->width)
+			draw_line(img, x, start_y, x, end_y, 0xFFFFFF);
 	}
 }
 
@@ -343,4 +345,16 @@ void	draw_grid(mlx_image_t *img, t_game *game)
 	// }
 	// draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
 	// 	0x00F0F0FF);
+}
+
+int	is_wall(t_game *game, double x, double y)
+{
+	int	grid_x;
+	int	grid_y;
+
+	grid_x = (int)(x / SQUARE_SIZE);
+	grid_y = (int)(y / SQUARE_SIZE);
+	if (grid_x < 0 || grid_x >= game->grid_width || grid_y < 0 || grid_y >= game->grid_height)
+		return (1);
+	return (game->map.grid[grid_y][grid_x] == '1');
 }

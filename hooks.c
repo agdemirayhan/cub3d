@@ -38,34 +38,62 @@ void	put_image_in_map(t_game *game)
 
 void	move_up(t_game *game)
 {
+	double	new_posx;
+	double	new_posy;
 	printf("Moving up | Angle: %f\n", game->angle);
 	fflush(stdout);
-	game->posx += cos(game->angle) * MOVE_SPEED;
-	game->posy += sin(game->angle) * MOVE_SPEED;
+	new_posx = game->posx + cos(game->angle) * MOVE_SPEED;
+	new_posy = game->posy + sin(game->angle) * MOVE_SPEED;
+	if (!is_wall(game, new_posx, new_posy))
+	{
+		game->posx = new_posx;
+		game->posy = new_posy;
+	}
 }
 
 void	move_down(t_game *game)
 {
+	double	new_posx;
+	double	new_posy;
 	printf("Moving down | Angle: %f\n", game->angle);
 	fflush(stdout);
-	game->posx -= cos(game->angle) * MOVE_SPEED;
-	game->posy -= sin(game->angle) * MOVE_SPEED;
+	new_posx = game->posx - cos(game->angle) * MOVE_SPEED;
+	new_posy = game->posy - sin(game->angle) * MOVE_SPEED;
+	if (!is_wall(game, new_posx, new_posy))
+	{
+		game->posx = new_posx;
+		game->posy = new_posy;
+	}
 }
 
 void	move_left(t_game *game)
 {
+	double	new_posx;
+	double	new_posy;
 	printf("Moving left | Angle: %f\n", game->angle);
 	fflush(stdout);
-	game->posx += cos(game->angle - P2) * MOVE_SPEED;
-	game->posy += sin(game->angle - P2) * MOVE_SPEED;
+	new_posx = game->posx + cos(game->angle - P2) * MOVE_SPEED;
+	new_posy = game->posy + sin(game->angle - P2) * MOVE_SPEED;
+	if (!is_wall(game, new_posx, new_posy))
+	{
+		game->posx = new_posx;
+		game->posy = new_posy;
+	}
 }
 
 void	move_right(t_game *game)
 {
+	double	new_posx;
+	double	new_posy;
 	printf("Moving right | Angle: %f\n", game->angle);
 	fflush(stdout);
-	game->posx += cos(game->angle + P2) * MOVE_SPEED;
-	game->posy += sin(game->angle + P2) * MOVE_SPEED;
+	new_posx = game->posx + cos(game->angle + P2) * MOVE_SPEED;
+	new_posy = game->posy + sin(game->angle + P2) * MOVE_SPEED;
+	if (!is_wall(game, new_posx, new_posy))
+	{
+		game->posx = new_posx;
+		game->posy = new_posy;
+	}
 }
 
 void	keyhook(mlx_key_data_t keydata, void *param)
