@@ -28,23 +28,27 @@ void	game_loop(void *param)
 	move_speed = MOVE_SPEED * delta_time * 60;
 	if (game->is_moving_up)
 	{
-		game->posx += cos(game->angle) * move_speed;
-		game->posy += sin(game->angle) * move_speed;
+		//game->posx += cos(game->angle) * move_speed;
+		//game->posy += sin(game->angle) * move_speed;
+		move_up(game);
 	}
 	if (game->is_moving_down)
 	{
-		game->posx -= cos(game->angle) * move_speed;
-		game->posy -= sin(game->angle) * move_speed;
+		//game->posx -= cos(game->angle) * move_speed;
+		//game->posy -= sin(game->angle) * move_speed;
+		move_down(game);
 	}
 	if (game->is_moving_left)
 	{
-		game->posx += cos(game->angle - P2) * move_speed;
-		game->posy += sin(game->angle - P2) * move_speed;
+		//game->posx += cos(game->angle - P2) * move_speed;
+		//game->posy += sin(game->angle - P2) * move_speed;
+		move_left(game);
 	}
 	if (game->is_moving_right)
 	{
-		game->posx += cos(game->angle + P2) * move_speed;
-		game->posy += sin(game->angle + P2) * move_speed;
+		//game->posx += cos(game->angle + P2) * move_speed;
+		//game->posy += sin(game->angle + P2) * move_speed;
+		move_right(game);
 	}
 	if (game->turning_left)
 	{

@@ -11,10 +11,10 @@
 # include <stdlib.h>
 # include <unistd.h>
 # define PI 3.1415926535
-# define DR (M_PI / 180)  
-# define P2 (M_PI / 2)     
-# define P3 (3 * M_PI / 2) 
-# define MOVE_SPEED 5      
+# define DR (M_PI / 180)
+# define P2 (M_PI / 2)
+# define P3 (3 * M_PI / 2)
+# define MOVE_SPEED 5
 
 # ifndef SQUARE_SIZE
 #  define SQUARE_SIZE 64
@@ -72,5 +72,6 @@ void				move_up(t_game *game);
 void				move_down(t_game *game);
 void				move_left(t_game *game);
 void				move_right(t_game *game);
+int					is_wall(t_game *game, double x, double y);
 
 #endif
