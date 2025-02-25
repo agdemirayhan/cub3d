@@ -1,67 +1,153 @@
 #include "cub3d.h"
-#include <time.h>
+
+/* PRINTING THE MOVES
+void	move_player(t_data *data)
+{
+	double	move_dir;
+	double	move_side;
+
+	// Moving forward ('W') or backward ('S')
+	if (data->mapstate.keycode_fb == 'W' || data->mapstate.keycode_fb == 'S')
+	{
+		move_dir = (data->mapstate.keycode_fb == 'W') ? 1 : -1;
+		printf("Moving %s...\n", (move_dir == 1) ? "forward" : "backward");
+		if (data->map_int[(int)(data->pos.x + move_dir * data->dir.x
+				* MOVE_SPEED)][(int)data->pos.y] == 0)
+			data->pos.x += move_dir * data->dir.x * MOVE_SPEED;
+		if (data->map_int[(int)data->pos.x][(int)(data->pos.y + move_dir
+				* data->dir.y * MOVE_SPEED)] == 0)
+			data->pos.y += move_dir * data->dir.y * MOVE_SPEED;
+	}
+	// Moving left ('A') or right ('D')
+	if (data->mapstate.keycode_lr == 'A' || data->mapstate.keycode_lr == 'D')
+	{
+		move_side = (data->mapstate.keycode_lr == 'D') ? 1 : -1;
+		printf("Strafing %s...\n", (move_side == 1) ? "right" : "left");
+		if (data->map_int[(int)(data->pos.x + move_side * data->plane.x
+				* MOVE_SPEED)][(int)data->pos.y] == 0)
+			data->pos.x += move_side * data->plane.x * MOVE_SPEED;
+		if (data->map_int[(int)data->pos.x][(int)(data->pos.y + move_side
+				* data->plane.y * MOVE_SPEED)] == 0)
+			data->pos.y += move_side * data->plane.y * MOVE_SPEED;
+	}
+	// Rotating left ('L') or right ('R')
+	if (data->mapstate.keycode_r == 'L' || data->mapstate.keycode_r == 'R')
+	{
+		printf("Rotating %s...\n",
+			(data->mapstate.keycode_r == 'L') ? "left" : "right");
+		rotate(data, data->mapstate.keycode_r);
+	}
+}
+
+void	rotate(t_data *data, int keycode)
+{
+	double	olddirx;
+	double	oldplanex;
+	double	rotation_angle;
+
+	if (keycode == 124) // Right rotation
+	{
+		data->mapstate.turn_direction = -1;
+		printf("Rotating right...\n");
+	}
+	else if (keycode == 123) // Left rotation
+	{
+		data->mapstate.turn_direction = 1;
+		printf("Rotating left...\n");
+	}
+	else
+		return ; // Invalid keycode, exit function
+	rotation_angle = data->mapstate.turn_direction * ROTSPEED;
+	data->mapstate.angle += data->mapstate.turn_direction * (ROTSPEED * 180
+			/ M_PI);
+	olddirx = data->dir.x;
+	data->dir.x = data->dir.x * cos(rotation_angle) - data->dir.y
+		* sin(rotation_angle);
+	data->dir.y = olddirx * sin(rotation_angle) + data->dir.y
+		* cos(rotation_angle);
+	oldplanex = data->plane.x;
+	data->plane.x = data->plane.x * cos(rotation_angle) - data->plane.y
+		* sin(rotation_angle);
+	data->plane.y = oldplanex * sin(rotation_angle) + data->plane.y
+		* cos(rotation_angle);
+}
+*/
+
+void	rotate(t_data *data, int keycode)
+{
+	double	olddirx;
+	double	oldplanex;
+	double	rotation_angle;
+
+	if (keycode == 124) // Right rotation
+		data->mapstate.turn_direction = -1;
+	else if (keycode == 123) // Left rotation
+		data->mapstate.turn_direction = 1;
+	else
+		return ;         // Invalid keycode, exit function
+	if (keycode == 124) // Right rotation
+		data->mapstate.turn_direction = -1;
+	else if (keycode == 123) // Left rotation
+		data->mapstate.turn_direction = 1;
+	else
+		return ; // Invalid keycode, exit function
+	rotation_angle = data->mapstate.turn_direction * ROTSPEED;
+	data->mapstate.angle += data->mapstate.turn_direction * (ROTSPEED * 180
+			/ M_PI);
+	olddirx = data->dir.x;
+	data->dir.x = data->dir.x * cos(rotation_angle) - data->dir.y
+		* sin(rotation_angle);
+	data->dir.y = olddirx * sin(rotation_angle) + data->dir.y
+		* cos(rotation_angle);
+	oldplanex = data->plane.x;
+	data->plane.x = data->plane.x * cos(rotation_angle) - data->plane.y
+		* sin(rotation_angle);
+	data->plane.y = oldplanex * sin(rotation_angle) + data->plane.y
+		* cos(rotation_angle);
+}
+
+void	move_player(t_data *data)
+{
+	double	move_dir;
+	double	move_side;
+
+	// Moving forward ('W') or backward ('S')
+	if (data->mapstate.keycode_fb == 'W' || data->mapstate.keycode_fb == 'S')
+	{
+		move_dir = (data->mapstate.keycode_fb == 'W') ? 1 : -1;
+		if (data->map_int[(int)(data->pos.x + move_dir * data->dir.x
+				* MOVE_SPEED)][(int)data->pos.y] == 0)
+			data->pos.x += move_dir * data->dir.x * MOVE_SPEED;
+		if (data->map_int[(int)data->pos.x][(int)(data->pos.y + move_dir
+				* data->dir.y * MOVE_SPEED)] == 0)
+			data->pos.y += move_dir * data->dir.y * MOVE_SPEED;
+	}
+	// Moving left ('A') or right ('D')
+	if (data->mapstate.keycode_lr == 'A' || data->mapstate.keycode_lr == 'D')
+	{
+		move_side = (data->mapstate.keycode_lr == 'D') ? 1 : -1;
+		if (data->map_int[(int)(data->pos.x + move_side * data->plane.x
+				* MOVE_SPEED)][(int)data->pos.y] == 0)
+			data->pos.x += move_side * data->plane.x * MOVE_SPEED;
+		if (data->map_int[(int)data->pos.x][(int)(data->pos.y + move_side
+				* data->plane.y * MOVE_SPEED)] == 0)
+			data->pos.y += move_side * data->plane.y * MOVE_SPEED;
+	}
+	// Rotating left ('L') or right ('R')
+	if (data->mapstate.keycode_r == 'L' || data->mapstate.keycode_r == 'R')
+		rotate(data, data->mapstate.keycode_r);
+}
 
 void	game_loop(void *param)
 {
-	t_game			*game;
-	static clock_t	last_time = 0;
-	static int		frame_count = 0;
-	static double	last_fps_update = 0;
-	clock_t			current_time;
-	double			delta_time;
-	double			move_speed;
+	int		x;
+	t_data	*data;
+	double	move_dir;
+	double	move_side;
 
-	// t_game_ray		*param;
-	param = ft_calloc(1, sizeof(t_game));
-	if (!game)
-		return ;
-	game = param;
-	current_time = clock();
-	delta_time = (double)(current_time - last_time) / CLOCKS_PER_SEC;
-	last_time = current_time;
-	frame_count++;
-	if ((double)(current_time) / CLOCKS_PER_SEC - last_fps_update >= 0.1)
-	{
-		printf("FPS: %d\n", frame_count * 10);
-		fflush(stdout);
-		frame_count = 0;
-		last_fps_update = (double)(current_time) / CLOCKS_PER_SEC;
-	}
-	move_speed = MOVE_SPEED;
-	if (game->is_moving_up)
-	{
-		game->posx += cos(game->angle) * move_speed;
-		game->posy += sin(game->angle) * move_speed;
-	}
-	if (game->is_moving_down)
-	{
-		game->posx -= cos(game->angle) * move_speed;
-		game->posy -= sin(game->angle) * move_speed;
-	}
-	if (game->is_moving_left)
-	{
-		game->posx += cos(game->angle - P2) * move_speed;
-		game->posy += sin(game->angle - P2) * move_speed;
-	}
-	if (game->is_moving_right)
-	{
-		game->posx += cos(game->angle + P2) * move_speed;
-		game->posy += sin(game->angle + P2) * move_speed;
-	}
-	if (game->turning_left)
-	{
-		game->angle -= PI / 64;
-		if (game->angle < 0)
-			game->angle += 2 * PI;
-	}
-	if (game->turning_right)
-	{
-		game->angle += PI / 64;
-		if (game->angle > 2 * PI)
-			game->angle -= 2 * PI;
-	}
-	// put_image_in_map(game);
-	// free(param);
+	x = 0;
+	data = (t_data *)param;
+	move_player(data);
 }
 
 int	main(int argc, char **argv)
@@ -82,6 +168,8 @@ int	main(int argc, char **argv)
 	}
 	parsing(argv[1], data, &game);
 	init_window_and_map(data, &game);
+	game_loop(&data);
+	mlx_loop(data->mlx.mlx_ptr);
 	free(data);
 	return (0);
 }

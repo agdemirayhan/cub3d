@@ -14,7 +14,8 @@
 # define DR (M_PI / 180)
 # define P2 (M_PI / 2)
 # define P3 (3 * M_PI / 2)
-# define MOVE_SPEED 5
+# define MOVE_SPEED 0.1
+# define ROTSPEED 0.05
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 768
 
@@ -28,21 +29,35 @@ typedef struct s_mlx
 	void			*win_ptr;
 }					t_mlx;
 
-typedef struct minimap
+typedef struct s_vec
+{
+	double			x;
+	double			y;
+}					t_vec;
+
+typedef struct s_mapstate
 {
 	unsigned int	map_width;
 	unsigned int	map_height;
-}					t_minimap;
+	int				keycode_fb;
+	int				keycode_r;
+	int				keycode_lr;
+	int				turn_direction;
+	int 			angle;
+}					t_mapstate;
 
 typedef struct s_data
 {
 	t_mlx			mlx;
+	t_vec			pos;
+	t_vec			dir;
+	t_vec			plane;
 	void			*img;
 	int				*addr;
 	int				bits_per_pixel;
 	int				line_length;
 	int				endian;
-	t_minimap		minimap;
+	t_mapstate		mapstate;
 	int				**map_int;
 }					t_data;
 

@@ -150,13 +150,12 @@ int	init_window_and_map(t_data *data, t_game *game)
 		return (1);
 	data->addr = (int *)mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
-	data->minimap.map_width = game->map_l;
-	data->minimap.map_height = game->map_h;
 	// Allocate and convert the map
 	if (allocate_map_memory(data, game))
 		return (1);
 	convert_map_to_int(data, game);
 	print_map_int(data, game);
+
 	return (0);
 }
 
