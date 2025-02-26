@@ -42,9 +42,23 @@ typedef struct s_mapstate
 	int				keycode_fb;
 	int				keycode_r;
 	int				keycode_lr;
+	int				prev_keycode_fb;
+	int				prev_keycode_r;
+	int				prev_keycode_lr;
 	int				turn_direction;
-	int 			angle;
+	int				angle;
 }					t_mapstate;
+
+// typedef struct s_mapstate
+// {
+// 	unsigned int	map_width;
+// 	unsigned int	map_height;
+// 	int				keycode_fb;
+// 	int				keycode_r;
+// 	int				keycode_lr;
+// 	int				turn_direction;
+// 	int				angle;
+// }					t_mapstate;
 
 typedef struct s_data
 {
