@@ -46,21 +46,6 @@ typedef struct s_mapstate
 	int 			angle;
 }					t_mapstate;
 
-typedef struct s_data
-{
-	t_mlx			mlx;
-	t_vec			pos;
-	t_vec			dir;
-	t_vec			plane;
-	void			*img;
-	int				*addr;
-	int				bits_per_pixel;
-	int				line_length;
-	int				endian;
-	t_mapstate		mapstate;
-	int				**map_int;
-}					t_data;
-
 typedef struct s_game_ray
 {
 	int				x;
@@ -122,6 +107,22 @@ typedef struct s_game
 	bool			turning_right;
 }					t_game;
 
+typedef struct s_data
+{
+	t_mlx			mlx;
+	t_vec			pos;
+	t_vec			dir;
+	t_vec			plane;
+	t_game			game;
+	void			*img;
+	int				*addr;
+	int				bits_per_pixel;
+	int				line_length;
+	int				endian;
+	t_mapstate		mapstate;
+	int				**map_int;
+}					t_data;
+
 // void				draw_grid(mlx_image_t *img, t_game *game);
 void				*parsing(char *argv, t_data *data, t_game *game);
 int					init_window_and_map(t_data *data, t_game *game);
@@ -138,5 +139,7 @@ void				move_up(t_game *game);
 void				move_down(t_game *game);
 void				move_left(t_game *game);
 void				move_right(t_game *game);
+void				draw_grid(void *mlx_ptr, void *win_ptr, t_game *game);
+int					init_window_and_map(t_data *data, t_game *game);
 
 #endif

@@ -139,23 +139,36 @@ void	print_map_int(t_data *data, t_game *game)
 	}
 }
 
+//int	init_window_and_map(t_data *data, t_game *game)
+//{
+//	data->mlx.win_ptr = mlx_new_window(data->mlx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT,
+//			"cub3d");
+//	if (!data->mlx.win_ptr)
+//		return (1);
+//	data->img = mlx_new_image(data->mlx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+//	if (!data->img)
+//		return (1);
+//	data->addr = (int *)mlx_get_data_addr(data->img, &data->bits_per_pixel,
+//			&data->line_length, &data->endian);
+//	// Allocate and convert the map
+//	if (allocate_map_memory(data, game))
+//		return (1);
+//	convert_map_to_int(data, game);
+//	print_map_int(data, game);
+
+//	return (0);
+//}
+
 int	init_window_and_map(t_data *data, t_game *game)
 {
-	data->mlx.win_ptr = mlx_new_window(data->mlx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT,
-			"cub3d");
+	game->window_width = game->map_l * SQUARE_SIZE;
+	game->window_height = game->map_h * SQUARE_SIZE;
+	data->mlx.win_ptr = mlx_new_window(data->mlx.mlx_ptr, game->window_width, game->window_height, "Cub3D");
 	if (!data->mlx.win_ptr)
+	{
+		printf("Failed to create window\n");
 		return (1);
-	data->img = mlx_new_image(data->mlx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
-	if (!data->img)
-		return (1);
-	data->addr = (int *)mlx_get_data_addr(data->img, &data->bits_per_pixel,
-			&data->line_length, &data->endian);
-	// Allocate and convert the map
-	if (allocate_map_memory(data, game))
-		return (1);
-	convert_map_to_int(data, game);
-	print_map_int(data, game);
-
+	}
 	return (0);
 }
 
@@ -175,6 +188,98 @@ void	print_map_comp(t_game *game)
 		printf("%s\n", game->map_comp[i]);
 	}
 }
+
+//void	*parsing(char *argv, t_data *data, t_game *game)
+//{
+//	int		fd;
+//	int		i;
+//	int		j;
+//	int		h_start;
+//	char	*tmp;
+//	char	*line;
+
+//	fd = open(argv, O_RDONLY);
+//	printf("here: %s\n", argv);
+//	if (fd < 0)
+//		return (printf("fd fails\n"), NULL);
+//	data->mlx.mlx_ptr = mlx_init();
+//	game->map_h = 0;
+//	h_start = 0;
+//	tmp = get_next_line(fd);
+//	while (tmp != NULL)
+//	{
+//		i = 0;
+//		while (tmp[i] == ' ' || tmp[i] == '\t')
+//			i++;
+//		if (tmp[i] != '\0')
+//		{
+//			if (tmp[i] == '1')
+//			{
+//				j = ft_strlen(tmp) - 1;
+//				while (j >= 0 && (tmp[j] == ' ' || tmp[j] == '\t'
+//						|| tmp[j] == '\n'))
+//					j--;
+//				if (j >= 0 && tmp[j] == '1')
+//					h_start = 1;
+//			}
+//		}
+//		if (h_start)
+//			game->map_h++;
+//		free(tmp);
+//		tmp = get_next_line(fd);
+//	}
+//	close(fd);
+//	printf("game->map_h: %d\n", game->map_h);
+//	fd = open(argv, O_RDONLY);
+//	if (fd < 0)
+//		return (printf("fd fails on second open\n"), NULL);
+//	while ((line = get_next_line(fd)) != NULL)
+//	{
+//		i = 0;
+//		while (line[i] == ' ' || line[i] == '\t')
+//			i++;
+//		if (line[i] != '\0' && line[i] == '1')
+//		{
+//			j = ft_strlen(line) - 1;
+//			while (j >= 0 && (line[j] == ' ' || line[j] == '\t'
+//					|| line[j] == '\n'))
+//				j--;
+//			if (j >= 0 && line[j] == '1')
+//				break ;
+//		}
+//		free(line);
+//	}
+//	game->map_comp = (char **)malloc(sizeof(char *) * game->map_h);
+//	if (!game->map_comp)
+//	{
+//		close(fd);
+//		return (printf("malloc map_comp fails\n"), NULL);
+//	}
+//	i = 0;
+//	while (i < game->map_h && line != NULL)
+//	{
+//		game->map_comp[i] = malloc(1000);
+//		if (!game->map_comp[i])
+//			return (printf("malloc map_comp[%d] fails\n", i), NULL);
+//		ft_memcpy(game->map_comp[i], line, ft_strlen(line) + 1);
+//		if (game->map_comp[i][ft_strlen(line) - 1] == '\n')
+//			game->map_comp[i][ft_strlen(line) - 1] = '\0';
+//		free(line);
+//		i++;
+//		line = get_next_line(fd);
+//	}
+//	close(fd);
+//	game->map_l = ft_strlen(game->map_comp[0]);
+//	i = 0;
+//	while (i < game->map_h)
+//	{
+//		if (game->map_l < ft_strlen(game->map_comp[i]))
+//			game->map_l = ft_strlen(game->map_comp[i]);
+//		i++;
+//	}
+//	print_map_comp(game);
+//	return (NULL);
+//}
 
 void	*parsing(char *argv, t_data *data, t_game *game)
 {
@@ -265,6 +370,10 @@ void	*parsing(char *argv, t_data *data, t_game *game)
 		i++;
 	}
 	print_map_comp(game);
+
+	// Initialize
+	game->map.grid = game->map_comp;
+
 	return (NULL);
 }
 
@@ -285,6 +394,35 @@ void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 	}
 	*grid_width = width;
 	*grid_height = height;
+}
+
+void	draw_grid(void *mlx_ptr, void *win_ptr, t_game *game)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < game->map_h)
+	{
+		x = 0;
+		while (x < game->map_l)
+		{
+			if (game->map.grid[y][x] == '1')
+			{
+				int i, j;
+				for (i = 0; i < SQUARE_SIZE; i++)
+				{
+					for (j = 0; j < SQUARE_SIZE; j++)
+					{
+						mlx_pixel_put(mlx_ptr, win_ptr, x * SQUARE_SIZE + i, y * SQUARE_SIZE + j, 0xFFFFFF);
+					}
+				}
+			}
+			x++;
+		}
+		y++;
+	}
+	mlx_pixel_put(mlx_ptr, win_ptr, game->posx, game->posy, 0xFF0F00);
 }
 
 // void	draw_line(mlx_image_t *img, int x0, int y0, int x1, int y1,
