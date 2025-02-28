@@ -95,11 +95,94 @@ int	game_loop(void *param)
 {
 	t_data		*data;
 	int			x;
-	t_raycast	ray;
+	t_raycast	raycast;
+	t_dda		dda;
+	int			y;
 
 	x = 0;
 	data = (t_data *)param;
 	move_player(data);
+	while (x < WIN_WIDTH)
+	{
+		raycast.cam_offset = 2.0 * x / (double)WIN_WIDTH - 1;
+		raycast.ray.x = data->dir.x + data->plane.x * raycast.cam_offset;
+		raycast.ray.y = data->dir.y + data->plane.y * raycast.cam_offset;
+		dda.map_x = (int)data->pos.x;
+		dda.map_y = (int)data->pos.y;
+		dda.delta_dist.x = 1e30;
+		if (dda.delta_dist.x != 0)
+			dda.delta_dist.x = fabs(1.0 / raycast.ray.x);
+		dda.delta_dist.y = 1e30;
+		if (dda.delta_dist.y != 0)
+			dda.delta_dist.y = fabs(1.0 / raycast.ray.y);
+		if (raycast.ray.x < 0)
+		{
+			dda.step_x = -1;
+			dda.side_dist.x = (data->pos.x - dda.map_x) * dda.delta_dist.x;
+		}
+		else
+		{
+			dda.step_x = 1;
+			dda.side_dist.x = (dda.map_x + 1.0 - data->pos.x)
+				* dda.delta_dist.x;
+		}
+		if (raycast.ray.y < 0)
+		{
+			dda.step_y = -1;
+			dda.side_dist.y = (data->pos.y - dda.map_y) * dda.delta_dist.y;
+		}
+		else
+		{
+			dda.step_y = 1;
+			dda.side_dist.y = (dda.map_y + 1.0 - data->pos.y)
+				* dda.delta_dist.y;
+		}
+		dda.hit = 0;
+		while (!dda.hit)
+		{
+			if (dda.side_dist.x < dda.side_dist.y)
+			{
+				dda.side_dist.x += dda.delta_dist.x;
+				dda.map_x += dda.step_x;
+				dda.side = 0;
+			}
+			else
+			{
+				dda.side_dist.y += dda.delta_dist.y;
+				dda.map_y += dda.step_y;
+				dda.side = 1;
+			}
+			if (data->map_int[dda.map_x][dda.map_y] == 1)
+				dda.hit = 1;
+			else
+				dda.hit = 0;
+		}
+		if (dda.side == 0)
+			dda.perp_wall_dist = (dda.side_dist.x - dda.delta_dist.x);
+		else
+			dda.perp_wall_dist = (dda.side_dist.y - dda.delta_dist.y);
+		dda.line_height = (int)(WIN_HEIGHT / dda.perp_wall_dist);
+		dda.draw_start = (int)(-dda.line_height / 2.0) + (int)(WIN_HEIGHT
+				/ 2.0);
+		if (dda.draw_start < 0)
+			dda.draw_start = 0;
+		dda.draw_end = (int)(dda.line_height / 2.0) + (int)(WIN_HEIGHT / 2.0);
+		if (dda.draw_end >= WIN_HEIGHT)
+			dda.draw_end = WIN_HEIGHT - 1;
+		y = 0;
+		while (y < dda.draw_start)
+		{
+			data->addr[y * WIN_WIDTH + x] = data->ceil_color;
+			y++;
+		}
+		while (y < WIN_HEIGHT)
+		{
+			data->addr[y * WIN_WIDTH + x] = data->floor_color;
+			y++;
+		}
+	}
+	mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->img, 0,
+		0);
 	return (0);
 }
 

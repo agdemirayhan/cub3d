@@ -73,6 +73,8 @@ typedef struct s_data
 	int				endian;
 	t_mapstate		mapstate;
 	int				**map_int;
+	unsigned int	ceil_color;
+	unsigned int	floor_color;
 }					t_data;
 
 typedef struct s_game_ray
@@ -110,9 +112,26 @@ typedef struct s_map
 	char			**grid;
 }					t_map;
 
+typedef struct s_dda
+{
+	int				map_x;
+	int				map_y;
+	t_vec			side_dist;
+	t_vec			delta_dist;
+	int				step_x;
+	int				step_y;
+	int				side;
+	double			perp_wall_dist;
+	int				hit;
+	int				line_height;
+	int				draw_start;
+	int				draw_end;
+
+}					t_dda;
+
 typedef struct s_raycast
 {
-	double			camera_x;
+	double			cam_offset;
 	t_vec			ray;
 }					t_raycast;
 
