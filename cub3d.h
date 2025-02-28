@@ -110,6 +110,12 @@ typedef struct s_map
 	char			**grid;
 }					t_map;
 
+typedef struct s_raycast
+{
+	double			camera_x;
+	t_vec			ray;
+}					t_raycast;
+
 typedef struct s_game
 {
 	// mlx_t			*mlx;

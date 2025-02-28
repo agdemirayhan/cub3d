@@ -93,8 +93,11 @@ void	move_player(t_data *data)
 
 int	game_loop(void *param)
 {
-	t_data	*data;
+	t_data		*data;
+	int			x;
+	t_raycast	ray;
 
+	x = 0;
 	data = (t_data *)param;
 	move_player(data);
 	return (0);
