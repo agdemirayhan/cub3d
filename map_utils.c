@@ -77,6 +77,12 @@ char	**parse_grid(int fd, char *line, t_game *game)
 				game->posx = j * SQUARE_SIZE;
 				game->posy = i * SQUARE_SIZE;
 				grid[i][j] = '0';
+				if (game->posx < 1 || game->posx >= game->map_l - 1
+					|| game->posy < 1 || game->posy >= game->map_h - 1)
+				{
+					printf("ERROR: Player placed too close to the edge! posx = %d, posy = %d\n", game->posx, game->posy);
+					exit(1);
+				}
 			}
 			j++;
 		}
@@ -90,14 +96,27 @@ char	**parse_grid(int fd, char *line, t_game *game)
 int	allocate_map_memory(t_data *data, t_game *game)
 {
 	unsigned int i, j;
+	if (game->map_h <= 0 || game->map_l <= 0)
+	{
+		printf("ERROR: Invalid map dimensions! map_h=%d, map_l=%d\n",
+			game->map_h, game->map_l);
+		return (1);
+	}
 	data->map_int = malloc(sizeof(int *) * game->map_h);
 	if (!data->map_int)
 		return (1);
 	for (i = 0; i < game->map_h; i++)
 	{
 		data->map_int[i] = malloc(sizeof(int) * game->map_l);
-		// if (!data->map_int[i])
-		// 	return free map
+		if (!data->map_int[i])
+		{
+			printf("ERROR: Memory allocation failed at row %d\n", i);
+			// Free allocated rows before returning
+			while (i > 0)
+				free(data->map_int[--i]);
+			free(data->map_int);
+			return (1);
+		}
 		for (j = 0; j < game->map_l; j++)
 			data->map_int[i][j] = -1;
 	}
@@ -106,22 +125,16 @@ int	allocate_map_memory(t_data *data, t_game *game)
 
 void	convert_map_to_int(t_data *data, t_game *game)
 {
-	unsigned int	i;
-	unsigned int	j;
-
-	i = 0;
-	while (i < game->map_h)
+	unsigned int i, j;
+	for (i = 0; i < game->map_h; i++)
 	{
-		j = 0;
-		while (game->map_comp[i][j])
+		for (j = 0; j < game->map_l && game->map_comp[i][j] != '\0'; j++)
 		{
 			if (game->map_comp[i][j] == '0' || game->map_comp[i][j] == '1')
 				data->map_int[i][j] = game->map_comp[i][j] - '0';
 			else
 				data->map_int[i][j] = -1;
-			j++;
 		}
-		i++;
 	}
 }
 
@@ -147,15 +160,22 @@ int	init_window_and_map(t_data *data, t_game *game)
 		return (1);
 	data->img = mlx_new_image(data->mlx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
 	if (!data->img)
+	{
+		printf("ERROR: mlx_new_image failed!\n");
 		return (1);
+	}
 	data->addr = (int *)mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
+	if (!data->addr)
+	{
+		printf("ERROR: mlx_get_data_addr failed!\n");
+		return (1);
+	}
 	// Allocate and convert the map
 	if (allocate_map_memory(data, game))
 		return (1);
 	convert_map_to_int(data, game);
 	print_map_int(data, game);
-
 	return (0);
 }
 
@@ -286,175 +306,3 @@ void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 	*grid_width = width;
 	*grid_height = height;
 }
-
-// void	draw_line(mlx_image_t *img, int x0, int y0, int x1, int y1,
-// 		uint32_t color)
-// {
-// 	int	dx;
-// 	int	dy;
-// 	int	sx;
-// 	int	sy;
-// 	int	err;
-// 	int	e2;
-
-// 	dx = abs(x1 - x0);
-// 	dy = abs(y1 - y0);
-// 	err = dx - dy;
-// 	if (x0 < x1)
-// 		sx = 1;
-// 	else
-// 		sx = -1;
-// 	if (y0 < y1)
-// 		sy = 1;
-// 	else
-// 		sy = -1;
-// 	while (1)
-// 	{
-// 		mlx_put_pixel(img, x0, y0, color);
-// 		if (x0 == x1 && y0 == y1)
-// 			break ;
-// 		e2 = err * 2;
-// 		if (e2 > -dy)
-// 		{
-// 			err -= dy;
-// 			x0 += sx;
-// 		}
-// 		if (e2 < dx)
-// 		{
-// 			err += dx;
-// 			y0 += sy;
-// 		}
-// 	}
-// }
-
-// void	draw_3d_view(mlx_image_t *img, t_game *game)
-// {
-// 	int		x;
-// 	float	ray_angle;
-// 	float	ray_x;
-// 	float	ray_y;
-// 	float	distance;
-// 	int		wall_height;
-
-// 	int start_y, end_y;
-// 	// Loop through every column (x) in the viewport
-// 	for (x = 0; x < game->window_width; x++)
-// 	{
-// 		// Calculate the angle for the current ray
-// 		ray_angle = game->angle + atan((x - game->window_width / 2)
-// 				/ (float)(game->window_width / 2));
-// 		// Initialize ray position to the player's position
-// 		ray_x = game->posx;
-// 		ray_y = game->posy;
-// 		distance = 0;
-// 		// Cast the ray until it hits a wall ('1')
-// 		while (game->map.grid[(int)(ray_y / SQUARE_SIZE)][(int)(ray_x
-// 				/ SQUARE_SIZE)] == '0')
-// 		{
-// 			ray_x += cos(ray_angle) * 1; // Move the ray forward
-// 			ray_y += sin(ray_angle) * 1;
-// 			distance++;
-// 		}
-// 		// Correct for fisheye distortion
-// 		distance *= cos(ray_angle - game->angle);
-// 		// Calculate the height of the wall based on distance
-// 		wall_height = (SQUARE_SIZE * game->window_height) / (distance * 2);
-// 		// Determine the starting and ending Y positions of the wall slice
-// 		start_y = (game->window_height / 2) - (wall_height / 2);
-// 		end_y = start_y + wall_height;
-// 		// Clamp values within the screen bounds
-// 		if (start_y < 0)
-// 			start_y = 0;
-// 		if (end_y > game->window_height)
-// 			end_y = game->window_height;
-// 		// Draw the vertical line for the current ray
-// 		draw_line(img, x, start_y, x, end_y, 0xFFFFFF);
-// 	}
-// }
-
-// void	draw_grid(mlx_image_t *img, t_game *game)
-// {
-// 	int x;
-// 	int y;
-// 	int line_length;
-// 	int end_x;
-// 	int end_y;
-
-// 	y = 0;
-// 	while (game->map.grid[y])
-// 	{
-// 		x = 0;
-// 		while (game->map.grid[y][x])
-// 		{
-// 			if (game->map.grid[y][x] == '1')
-// 			{
-// 				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE,
-// 					SQUARE_SIZE, SQUARE_SIZE, 0xFFFFFFFF);
-// 			}
-// 			else if (game->map.grid[y][x] == '0')
-// 			{
-// 				draw_rectangle(img, x * SQUARE_SIZE, y * SQUARE_SIZE,
-// 					SQUARE_SIZE, SQUARE_SIZE, 0x000000FF);
-// 			}
-// 			x++;
-// 		}
-// 		y++;
-// 	}
-// 	draw_rectangle(img, game->posx, game->posy, 16, 16, 0xFF0000FF);
-
-// 	double temp_angle = game->angle - PI / 6;
-
-// 	while (temp_angle <= game->angle + PI / 6)
-// 	{
-// 		line_length = 0;
-// 		end_x = game->posx + 16 / 2 + line_length * cos(temp_angle);
-// 		end_y = game->posy + 16 / 2 + line_length * sin(temp_angle);
-// 		while (game->map.grid[(end_y) / SQUARE_SIZE][(end_x)
-// 			/ SQUARE_SIZE] == '0')
-// 		{
-// 			// printf("line_length:%d\n", line_length);
-// 			line_length++;
-// 			end_x = game->posx + 16 / 2 + line_length * cos(temp_angle);
-// 			end_y = game->posy + 16 / 2 + line_length * sin(temp_angle);
-// 		}
-// 		draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
-// 			0x00F0F0FF);
-// 		// draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x,
-// end_y,
-// 		// 	0x00F0F0FF);
-
-// 		temp_angle = temp_angle + PI / 256;
-// 	}
-// 	draw_3d_view(img, game);
-
-// 	// printf("end_x:%d\n", end_x);
-// 	// printf("end_y:%d\n", end_y);
-// 	// printf("game->map.grid[end_y][end_x]:%c\n", game->map.grid[end_y
-// 	// / SQUARE_SIZE][end_x / SQUARE_SIZE]);
-
-// 	// CALISAN KOD
-// 	// while (game->map.grid[(end_y) / SQUARE_SIZE][(end_x)
-// 	// / SQUARE_SIZE] == '0')
-// 	// {
-// 	// 	// printf("line_length:%d\n", line_length);
-// 	// 	line_length++;
-// 	// 	end_x = game->posx + 16 / 2 + line_length * cos(game->angle);
-// 	// 	end_y = game->posy + 16 / 2 + line_length * sin(game->angle);
-// 	// }
-// 	// draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
-// 	// 	0x00F0F0FF);
-// 	// double temp_angle = game->angle - PI / 6;
-// 	// line_length = 0;
-// 	// end_x = game->posx + 16 / 2 + line_length * cos(temp_angle);
-// 	// end_y = game->posy + 16 / 2 + line_length * sin(temp_angle);
-// 	// while (game->map.grid[(end_y) / SQUARE_SIZE][(end_x)
-// 	// / SQUARE_SIZE] == '0')
-// 	// {
-// 	// 	// printf("line_length:%d\n", line_length);
-// 	// 	line_length++;
-// 	// 	end_x = game->posx + 16 / 2 + line_length * cos(temp_angle);
-// 	// 	end_y = game->posy + 16 / 2 + line_length * sin(temp_angle);
-// 	// }
-// 	// draw_line(img, game->posx + 16 / 2, game->posy + 16 / 2, end_x, end_y,
-// 	// 	0x00F0F0FF);
-// }

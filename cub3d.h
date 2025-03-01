@@ -18,6 +18,8 @@
 # define ROTSPEED 0.05
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 768
+# define X 0
+# define Y 1
 
 # ifndef SQUARE_SIZE
 #  define SQUARE_SIZE 64
@@ -75,6 +77,38 @@ typedef struct s_data
 	int				**map_int;
 	unsigned int	ceil_color;
 	unsigned int	floor_color;
+	int				tex_w;
+	int				tex_h;
+	int				tex_w1;
+	int				tex_h1;
+	int				tex_w2;
+	int				tex_h2;
+	int				tex_w3;
+	int				tex_h3;
+	int				tex_w4;
+	int				tex_h4;
+	int				cnv_bpp1;
+	int				cnv_ll1;
+	int				cnv_en1;
+	void			*cnv_img2;
+	int				*cnv_addr2;
+	int				cnv_bpp2;
+	int				cnv_ll2;
+	int				cnv_en2;
+	void			*cnv_img3;
+	int				*cnv_addr3;
+	int				cnv_bpp3;
+	int				cnv_ll3;
+	int				cnv_en3;
+	void			*cnv_img4;
+	int				*cnv_addr4;
+	int				cnv_bpp4;
+	int				cnv_ll4;
+	int				cnv_en4;
+	int				texx;
+	int				texy;
+	void			*cnv_img1;
+	int				*cnv_addr1;
 }					t_data;
 
 typedef struct s_game_ray
@@ -131,7 +165,7 @@ typedef struct s_dda
 
 typedef struct s_raycast
 {
-	double			cam_offset;
+	double			camera_x;
 	t_vec			ray;
 }					t_raycast;
 

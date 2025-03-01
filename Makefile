@@ -7,7 +7,7 @@ OBJS = $(addprefix $(OBJDIR)/, $(SRCS_LIST:.c=.o))
 NAME = cube3d
 
 # ------------------------------ COMPILATION ------------------------------
-CC = cc
+CC = gcc -g
 FLAGS = -fsanitize=address
 # FLAGS = -Wall -Wextra -Werror
 RM = rm -rf
