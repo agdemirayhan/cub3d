@@ -120,6 +120,7 @@ static void	prepare_dda(t_data *data, t_raycast *rc, t_dda *dda_)
 {
 	dda_->map_x = (int)data->pos.x;
 	dda_->map_y = (int)data->pos.y;
+	printf("pos.x = %f, pos.y = %f\n", data->pos.x, data->pos.y);
 	// Ensure delta_dist is never zero to avoid division errors
 	dda_->delta_dist.x = (rc->ray.x == 0) ? 1e30 : fabs(1.0 / rc->ray.x);
 	dda_->delta_dist.y = (rc->ray.y == 0) ? 1e30 : fabs(1.0 / rc->ray.y);
@@ -271,6 +272,7 @@ void	texture_prep(t_data *data, t_dda *dda_, t_raycast *rc)
 	wallx -= floor(wallx);
 	tex_onwhich_side(data, dda_, rc);
 	data->texx = (int)(wallx * (double)data->tex_w);
+	printf("data->texx: %d\n", data->texx);
 	if (dda_->side == 0 && rc->ray.x > 0)
 		data->texx = data->tex_w - data->texx - 1;
 	if (dda_->side == 1 && rc->ray.y < 0)
@@ -321,7 +323,7 @@ int	game_loop(void *param)
 		if (dda_.draw_end >= WIN_HEIGHT)
 			dda_.draw_end = WIN_HEIGHT - 1;
 		draw_line(data, x, dda_.draw_start);
-		texture_loop(data, &dda_, &rc, x);
+		// texture_loop(data, &dda_, &rc, x);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->img, 0,

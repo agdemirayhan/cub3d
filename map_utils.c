@@ -196,6 +196,83 @@ void	print_map_comp(t_game *game)
 	}
 }
 
+static void	my_fill_heroe_position_1(t_data *data, char *direction)
+{
+	if (direction[0] == 'S')
+	{
+		data->dir.x = 1;
+		data->dir.y = 0;
+		data->plane.x = 0;
+		data->plane.y = -0.66;
+		data->mapstate.rot = 0;
+	}
+	if (direction[0] == 'E')
+	{
+		data->dir.x = 0;
+		data->dir.y = 1;
+		data->plane.x = 0.66;
+		data->plane.y = 0;
+		data->mapstate.rot = 90;
+	}
+	if (direction[0] == 'W')
+	{
+		data->dir.x = 0;
+		data->dir.y = -1;
+		data->plane.x = -0.66;
+		data->plane.y = 0;
+		data->mapstate.rot = 270;
+	}
+}
+
+static void	my_fill_heroe_position(t_game *game, int y, int x, t_data *data)
+{
+	char	*directions;
+	char	*direction;
+
+	directions = "ESWN";
+	data->pos.x = y + 0.25;
+	data->pos.y = x + 0.25;
+	direction = ft_strchr(directions, game->map_comp[y][x]);
+	game->map_comp[y][x] = '0';
+	if (direction[0] == 'N')
+	{
+		data->dir.x = -1;
+		data->dir.y = 0;
+		data->plane.x = 0;
+		data->plane.y = 0.66;
+		data->mapstate.rot = 180;
+	}
+	my_fill_heroe_position_1(data, direction);
+}
+
+static int	my_check_chars_and_heroes(t_game *game, t_data *data)
+{
+	unsigned int	i;
+	int				j;
+	int				qty_heroes;
+
+	qty_heroes = 0;
+	i = -1;
+	while (++i < game->map_h)
+	{
+		j = -1;
+		while (game->map_comp[i][++j] != '\0')
+		{
+			if (!ft_strchr(" 01NSEW", game->map_comp[i][j]))
+				return (printf("Error: Invalid character in map\n"), 1);
+			if (ft_strchr("NSEW", game->map_comp[i][j]))
+			{
+				if (qty_heroes > 0)
+					return (printf("Error: More than one hero in map\n"), 1);
+				qty_heroes = 1;
+				my_fill_heroe_position(game, i, j, data);
+			}
+		}
+	}
+	return (0);
+}
+
+
 void	*parsing(char *argv, t_data *data, t_game *game)
 {
 	int		fd;
@@ -211,6 +288,13 @@ void	*parsing(char *argv, t_data *data, t_game *game)
 		return (printf("fd fails\n"), NULL);
 	data->mlx.mlx_ptr = mlx_init();
 	game->map_h = 0;
+	game->ceil_color = 100000000;
+	game->floor_color = 100000000;
+	game->map_h_tmp = 0;
+	data->cnv_img1 = NULL;
+	data->cnv_img2 = NULL;
+	data->cnv_img3 = NULL;
+	data->cnv_img4 = NULL;
 	h_start = 0;
 	tmp = get_next_line(fd);
 	while (tmp != NULL)
@@ -285,6 +369,24 @@ void	*parsing(char *argv, t_data *data, t_game *game)
 		i++;
 	}
 	print_map_comp(game);
+	printf("map_l:%d\n", game->map_l);
+	if (my_check_chars_and_heroes(game, data) != 0)
+	{
+		printf("Error: Invalid map configuration\n");
+		return (NULL);
+	}
+	i = -1;
+	while (++i < game->map_h)
+	{
+		printf("i:%d\n",i);
+		j = game->map_l;
+		if (j < ft_strlen(game->map_comp[i]))
+		{
+			game->map_comp[i][j] = '\0';
+		}
+		while (j > 0 && game->map_comp[i][--j] != '1')
+			game->map_comp[i][j] = ' ';
+	}
 	return (NULL);
 }
 

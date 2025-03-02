@@ -44,6 +44,7 @@ typedef struct s_mapstate
 	int				keycode_fb;
 	int				keycode_r;
 	int				keycode_lr;
+	double			rot;
 	int				prev_keycode_fb;
 	int				prev_keycode_r;
 	int				prev_keycode_lr;
@@ -169,6 +170,13 @@ typedef struct s_raycast
 	t_vec			ray;
 }					t_raycast;
 
+typedef struct s_rgb
+{
+	unsigned int	r;
+	unsigned int	g;
+	unsigned int	b;
+}	t_rgb;
+
 typedef struct s_game
 {
 	// mlx_t			*mlx;
@@ -182,9 +190,13 @@ typedef struct s_game
 	int				grid_height;
 	int				window_width;
 	int				window_height;
+	t_rgb			rgb;
 	int				posx;
 	int				posy;
 	double			angle;
+	unsigned int	ceil_color;
+	unsigned int	floor_color;
+	unsigned int	map_h_tmp;
 	// mlx_key_data_t	last_key_data;
 
 	bool			is_moving_up;
