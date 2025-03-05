@@ -39,17 +39,17 @@ int	parse_color(char *line, int *r, int *g, int *b)
 	return (0);
 }
 
-void	parse_textures(char *line, t_map *map)
-{
-	if (ft_strncmp(line, "NO", 2) == 0)
-		map->texture_no = ft_strdup(&line[3]);
-	else if (ft_strncmp(line, "SO", 2) == 0)
-		map->texture_so = ft_strdup(&line[3]);
-	else if (ft_strncmp(line, "WE", 2) == 0)
-		map->texture_we = ft_strdup(&line[3]);
-	else if (ft_strncmp(line, "EA", 2) == 0)
-		map->texture_ea = ft_strdup(&line[3]);
-}
+// void	parse_textures(char *line, t_map *map)
+// {
+// 	if (ft_strncmp(line, "NO", 2) == 0)
+// 		map->texture_no = ft_strdup(&line[3]);
+// 	else if (ft_strncmp(line, "SO", 2) == 0)
+// 		map->texture_so = ft_strdup(&line[3]);
+// 	else if (ft_strncmp(line, "WE", 2) == 0)
+// 		map->texture_we = ft_strdup(&line[3]);
+// 	else if (ft_strncmp(line, "EA", 2) == 0)
+// 		map->texture_ea = ft_strdup(&line[3]);
+// }
 
 char	**parse_grid(int fd, char *line, t_game *game)
 {
@@ -80,7 +80,7 @@ char	**parse_grid(int fd, char *line, t_game *game)
 				if (game->posx < 1 || game->posx >= game->map_l - 1
 					|| game->posy < 1 || game->posy >= game->map_h - 1)
 				{
-					printf("ERROR: Player placed too close to the edge! posx = %d, posy = %d\n", game->posx, game->posy);
+					printf("ERROR: Player placed too close to the edge!\n");
 					exit(1);
 				}
 			}
@@ -272,6 +272,15 @@ static int	my_check_chars_and_heroes(t_game *game, t_data *data)
 	return (0);
 }
 
+int	check_texture(int sign, t_data *data)
+{
+	void	*textures[] = {data->cnv_img1, data->cnv_img2, data->cnv_img3,
+			data->cnv_img4};
+
+	if (sign >= 0 && sign < 4 && textures[sign] != NULL)
+		return (sign + 1);
+	return (0);
+}
 
 void	*parsing(char *argv, t_data *data, t_game *game)
 {
@@ -281,6 +290,9 @@ void	*parsing(char *argv, t_data *data, t_game *game)
 	int		h_start;
 	char	*tmp;
 	char	*line;
+	int		sign;
+	void	*textures[] = {data->cnv_img1, data->cnv_img2, data->cnv_img3,
+			data->cnv_img4};
 
 	fd = open(argv, O_RDONLY);
 	printf("here: %s\n", argv);
@@ -297,6 +309,28 @@ void	*parsing(char *argv, t_data *data, t_game *game)
 	data->cnv_img4 = NULL;
 	h_start = 0;
 	tmp = get_next_line(fd);
+	while (tmp != NULL)
+	{
+		if (line[0] == 'N' && line[1] == 'O')
+			sign = 1;
+		else if (line[0] == 'S' && line[1] == 'O')
+			sign = 0;
+		else if (line[0] == 'E' && line[1] == 'A')
+			sign = 2;
+		else if (line[0] == 'W' && line[1] == 'E')
+			sign = 3;
+		else
+			return (ft_putstr_fd("Error: Invalid texture identifier\n", 1),
+				NULL);
+		if (check_texture(sign, data) != 0)
+			return (ft_putstr_fd("Error: Duplicate texture identifier\n", 1),
+				NULL);
+		tmp = tmp + 2;
+		while (*tmp && *tmp == ' ')
+			tmp++;
+		// if (parsing_texture(tmp, sign, data) != 0)
+		// 	return (NULL);
+	}
 	while (tmp != NULL)
 	{
 		i = 0;
@@ -378,7 +412,7 @@ void	*parsing(char *argv, t_data *data, t_game *game)
 	i = -1;
 	while (++i < game->map_h)
 	{
-		printf("i:%d\n",i);
+		printf("i:%d\n", i);
 		j = game->map_l;
 		if (j < ft_strlen(game->map_comp[i]))
 		{
