@@ -1,4 +1,4 @@
-SRCS_LIST = cub3d.c hooks.c map_utils.c
+SRCS_LIST = cub3d.c hooks.c map_utils.c map_check.c
 
 SRCS = $(SRCS_LIST)
 OBJDIR = objs
@@ -7,7 +7,7 @@ OBJS = $(addprefix $(OBJDIR)/, $(SRCS_LIST:.c=.o))
 NAME = cube3d
 
 # ------------------------------ COMPILATION ------------------------------
-CC = cc
+CC = gcc -g
 FLAGS = -fsanitize=address
 # FLAGS = -Wall -Wextra -Werror
 RM = rm -rf
