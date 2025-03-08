@@ -272,24 +272,18 @@ static int	my_check_chars_and_heroes(t_game *game, t_data *data)
 	return (0);
 }
 
-int	parsing(char *argv, t_data *data, t_game *game)
+int	validate_map_file(char *argv)
 {
-	int		fd;
-	int		i;
-	int		j;
-	char	*line;
-	int		map_start;
-	int		len;
-	char	*tmp;
-	int		line_len;
+	int	len;
 
-	map_start = 0;
 	len = ft_strlen(argv);
 	if (len < 4 || ft_strncmp(argv + len - 4, ".cub", 4) != 0)
-		return (printf("Error: wrong map type\n"), 1);
-	fd = open(argv, O_RDONLY);
-	if (fd < 0)
-		return (printf("Error: Failed to open map file\n"), 1);
+		return (printf("Error: wrong map type\n"), 0);
+	return (1);
+}
+
+void	init_game_data(t_data *data, t_game *game)
+{
 	data->mlx.mlx_ptr = mlx_init();
 	game->map_h = 0;
 	game->ceil_color = 100000000;
@@ -298,6 +292,53 @@ int	parsing(char *argv, t_data *data, t_game *game)
 	data->cnv_img2 = NULL;
 	data->cnv_img3 = NULL;
 	data->cnv_img4 = NULL;
+}
+
+void	find_max_map_width(t_game *game)
+{
+	int	i;
+	int	len;
+
+	game->map_l = 0;
+	i = 0;
+	while (i < game->map_h)
+	{
+		len = ft_strlen(game->map_comp[i]);
+		if (len > game->map_l)
+			game->map_l = len;
+		i++;
+	}
+}
+
+int	parsing(char *argv, t_data *data, t_game *game)
+{
+	int		fd;
+	int		i;
+	int		j;
+	char	*line;
+	int		map_start;
+	//int		len;
+	char	*tmp;
+	int		line_len;
+
+	map_start = 0;
+	if (!validate_map_file(argv))
+		return (1);
+	init_game_data(data, game);
+	//len = ft_strlen(argv);
+	//if (len < 4 || ft_strncmp(argv + len - 4, ".cub", 4) != 0)
+	//	return (printf("Error: wrong map type\n"), 1);
+	fd = open(argv, O_RDONLY);
+	if (fd < 0)
+		return (printf("Error: Failed to open map file\n"), 1);
+	//data->mlx.mlx_ptr = mlx_init();
+	//game->map_h = 0;
+	//game->ceil_color = 100000000;
+	//game->floor_color = 100000000;
+	//data->cnv_img1 = NULL;
+	//data->cnv_img2 = NULL;
+	//data->cnv_img3 = NULL;
+	//data->cnv_img4 = NULL;
 	while ((tmp = get_next_line(fd)) != NULL)
 	{
 		if (tmp[0] == '\n' || tmp[0] == '\0')
@@ -386,15 +427,16 @@ int	parsing(char *argv, t_data *data, t_game *game)
 	game->map_comp[i] = NULL;
 	game->map_h = i;
 	close(fd);
-	game->map_l = 0;
-	i = 0;
-	while (i < game->map_h)
-	{
-		len = ft_strlen(game->map_comp[i]);
-		if (len > game->map_l)
-			game->map_l = len;
-		i++;
-	}
+	find_max_map_width(game);
+	//game->map_l = 0;
+	//i = 0;
+	//while (i < game->map_h)
+	//{
+	//	len = ft_strlen(game->map_comp[i]);
+	//	if (len > game->map_l)
+	//		game->map_l = len;
+	//	i++;
+	//}
 	expand_map_lines(game);
 	print_map_comp(game);
 	printf("Map width: %d\n", game->map_l);
@@ -424,123 +466,6 @@ int	parsing(char *argv, t_data *data, t_game *game)
 	}
 	return (0);
 }
-
-//void	*parsing(char *argv, t_data *data, t_game *game)
-//{
-//	int		fd;
-//	int		i;
-//	int		j;
-//	int		h_start;
-//	char	*tmp;
-//	char	*line;
-
-//	fd = open(argv, O_RDONLY);
-//	printf("here: %s\n", argv);
-//	if (fd < 0)
-//		return (printf("fd fails\n"), NULL);
-//	data->mlx.mlx_ptr = mlx_init();
-//	game->map_h = 0;
-//	game->ceil_color = 100000000;
-//	game->floor_color = 100000000;
-//	game->map_h_tmp = 0;
-//	data->cnv_img1 = NULL;
-//	data->cnv_img2 = NULL;
-//	data->cnv_img3 = NULL;
-//	data->cnv_img4 = NULL;
-//	h_start = 0;
-//	tmp = get_next_line(fd);
-//	while (tmp != NULL)
-//	{
-//		i = 0;
-//		while (tmp[i] == ' ' || tmp[i] == '\t')
-//			i++;
-//		if (tmp[i] != '\0')
-//		{
-//			if (tmp[i] == '1')
-//			{
-//				j = ft_strlen(tmp) - 1;
-//				while (j >= 0 && (tmp[j] == ' ' || tmp[j] == '\t'
-//						|| tmp[j] == '\n'))
-//					j--;
-//				if (j >= 0 && tmp[j] == '1')
-//					h_start = 1;
-//			}
-//		}
-//		if (h_start)
-//			game->map_h++;
-//		free(tmp);
-//		tmp = get_next_line(fd);
-//	}
-//	close(fd);
-//	printf("game->map_h: %d\n", game->map_h);
-//	fd = open(argv, O_RDONLY);
-//	if (fd < 0)
-//		return (printf("fd fails on second open\n"), NULL);
-//	while ((line = get_next_line(fd)) != NULL)
-//	{
-//		i = 0;
-//		while (line[i] == ' ' || line[i] == '\t')
-//			i++;
-//		if (line[i] != '\0' && line[i] == '1')
-//		{
-//			j = ft_strlen(line) - 1;
-//			while (j >= 0 && (line[j] == ' ' || line[j] == '\t'
-//					|| line[j] == '\n'))
-//				j--;
-//			if (j >= 0 && line[j] == '1')
-//				break ;
-//		}
-//		free(line);
-//	}
-//	game->map_comp = (char **)malloc(sizeof(char *) * game->map_h);
-//	if (!game->map_comp)
-//	{
-//		close(fd);
-//		return (printf("malloc map_comp fails\n"), NULL);
-//	}
-//	i = 0;
-//	while (i < game->map_h && line != NULL)
-//	{
-//		game->map_comp[i] = malloc(1000);
-//		if (!game->map_comp[i])
-//			return (printf("malloc map_comp[%d] fails\n", i), NULL);
-//		ft_memcpy(game->map_comp[i], line, ft_strlen(line) + 1);
-//		if (game->map_comp[i][ft_strlen(line) - 1] == '\n')
-//			game->map_comp[i][ft_strlen(line) - 1] = '\0';
-//		free(line);
-//		i++;
-//		line = get_next_line(fd);
-//	}
-//	close(fd);
-//	game->map_l = ft_strlen(game->map_comp[0]);
-//	i = 0;
-//	while (i < game->map_h)
-//	{
-//		if (game->map_l < ft_strlen(game->map_comp[i]))
-//			game->map_l = ft_strlen(game->map_comp[i]);
-//		i++;
-//	}
-//	print_map_comp(game);
-//	printf("map_l:%d\n", game->map_l);
-//	if (my_check_chars_and_heroes(game, data) != 0)
-//	{
-//		printf("Error: Invalid map configuration\n");
-//		return (NULL);
-//	}
-//	i = -1;
-//	while (++i < game->map_h)
-//	{
-//		printf("i:%d\n",i);
-//		j = game->map_l;
-//		if (j < ft_strlen(game->map_comp[i]))
-//		{
-//			game->map_comp[i][j] = '\0';
-//		}
-//		while (j > 0 && game->map_comp[i][--j] != '1')
-//			game->map_comp[i][j] = ' ';
-//	}
-//	return (NULL);
-//}
 
 void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 {
