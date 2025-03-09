@@ -35,7 +35,7 @@
 
 void	move_up(t_game *game)
 {
-	printf("Moving up | Angle: %f\n", game->angle);
+	// printf("Moving up | Angle: %f\n", game->angle);
 	fflush(stdout);
 	game->posx += cos(game->angle) * MOVE_SPEED;
 	game->posy += sin(game->angle) * MOVE_SPEED;
@@ -43,7 +43,7 @@ void	move_up(t_game *game)
 
 void	move_down(t_game *game)
 {
-	printf("Moving down | Angle: %f\n", game->angle);
+	// printf("Moving down | Angle: %f\n", game->angle);
 	fflush(stdout);
 	game->posx -= cos(game->angle) * MOVE_SPEED;
 	game->posy -= sin(game->angle) * MOVE_SPEED;
@@ -51,7 +51,7 @@ void	move_down(t_game *game)
 
 void	move_left(t_game *game)
 {
-	printf("Moving left | Angle: %f\n", game->angle);
+	// printf("Moving left | Angle: %f\n", game->angle);
 	fflush(stdout);
 	game->posx += cos(game->angle - P2) * MOVE_SPEED;
 	game->posy += sin(game->angle - P2) * MOVE_SPEED;
@@ -59,7 +59,7 @@ void	move_left(t_game *game)
 
 void	move_right(t_game *game)
 {
-	printf("Moving right | Angle: %f\n", game->angle);
+	// printf("Moving right | Angle: %f\n", game->angle);
 	fflush(stdout);
 	game->posx += cos(game->angle + P2) * MOVE_SPEED;
 	game->posy += sin(game->angle + P2) * MOVE_SPEED;
