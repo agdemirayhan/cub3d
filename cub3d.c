@@ -55,9 +55,8 @@ void	rotate(t_data *data, int keycode)
 // PRINTING THE MOVES
 void	move_player(t_data *data)
 {
-	double	move_speed;
-	double	new_x;
-	double	new_y;
+	double	move_dir;
+	double	move_side;
 
 	// Moving forward ('W') or backward ('S')
 	if (data->mapstate.keycode_fb == 'W' || data->mapstate.keycode_fb == 'S')
@@ -312,6 +311,7 @@ int	game_loop(void *param)
 	t_dda		dda_;
 	int			y;
 
+	x = 0;
 	data = (t_data *)param;
 	move_player(data);
 	while (x < WIN_WIDTH)
@@ -333,6 +333,7 @@ int	game_loop(void *param)
 
 int	main(int argc, char **argv)
 {
+	t_game	game;
 	t_data	*data;
 	int		i;
 
@@ -370,10 +371,10 @@ int	main(int argc, char **argv)
 		free(data);
 		return (1);
 	}
-	game_loop(data);
-	mlx_hook(data->mlx.win_ptr, 2, 0, key_press, data);
-	mlx_loop_hook(data->mlx.mlx_ptr, game_loop, data);
-	mlx_loop(data->mlx.mlx_ptr);
+	// game_loop(data);
+	// mlx_hook(data->mlx.win_ptr, 2, 0, key_press, data);
+	// mlx_loop_hook(data->mlx.mlx_ptr, game_loop, data);
+	// mlx_loop(data->mlx.mlx_ptr);
 
 	free(data);
 	return (0);

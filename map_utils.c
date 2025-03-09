@@ -283,6 +283,35 @@ static int	my_check_chars_and_heroes(t_game *game, t_data *data)
 	return (0);
 }
 
+int	check_texture(int sign, t_data *data)
+{
+	void	*textures[] = {data->cnv_img1, data->cnv_img2, data->cnv_img3,
+			data->cnv_img4};
+
+	if (sign >= 0 && sign < 4 && textures[sign] != NULL)
+		return (sign + 1);
+	return (0);
+}
+
+int extract_number(char **line) {
+     int value = 0;
+ 
+     while (**line == ' ') (*line)++; // Skip spaces
+ 
+     if (!ft_isdigit(**line)) return -1; // Ensure it's a digit
+ 
+     while (ft_isdigit(**line)) { // Convert string to int
+         value = value * 10 + (**line - '0');
+         (*line)++;
+     }
+ 
+     if (value > 255) return -1; // Ensure valid RGB range
+ 
+     while (**line == ' ') (*line)++; // Skip spaces
+ 
+     return value;
+ }
+
 int	parsing(char *argv, t_data *data, t_game *game)
 {
 	int		fd;
@@ -293,6 +322,8 @@ int	parsing(char *argv, t_data *data, t_game *game)
 	int		len;
 	char	*tmp;
 	int		line_len;
+	int		sign;
+	int		h_start;
 
 	map_start = 0;
 	len = ft_strlen(argv);
@@ -311,6 +342,57 @@ int	parsing(char *argv, t_data *data, t_game *game)
 	data->cnv_img2 = NULL;
 	data->cnv_img3 = NULL;
 	data->cnv_img4 = NULL;
+	int r, g, b;
+	h_start = 0;
+	tmp = get_next_line(fd);
+	int k = 0;
+	while (tmp != NULL && k < 4 )
+	{
+		if (tmp[0] == 'N' && tmp[1] == 'O')
+		{
+			sign = 1;
+			data->cnv_img2 = mlx_xpm_file_to_image(data->mlx.mlx_ptr,
+				line, &data->tex_w2, &data->tex_h2);
+			}
+		else if (tmp[0] == 'S' && tmp[1] == 'O')
+		{
+			sign = 0;
+			data->cnv_img1 = mlx_xpm_file_to_image(data->mlx.mlx_ptr, \
+				line, &data->tex_w1, &data->tex_h1);
+			}
+		else if (tmp[0] == 'E' && tmp[1] == 'A')
+			{
+				sign = 2;
+				data->cnv_img3 = mlx_xpm_file_to_image(data->mlx.mlx_ptr,
+				line, &data->tex_w3, &data->tex_h3);
+			}
+		else if (tmp[0] == 'W' && tmp[1] == 'E')
+		{
+			sign = 3;
+			data->cnv_img4 = mlx_xpm_file_to_image(data->mlx.mlx_ptr,
+				line, &data->tex_w4, &data->tex_h4);
+			}	
+		else
+			return (ft_putstr_fd("Error: Invalid texture identifier\n", 1),
+				1);
+		printf("sign: %d\n", sign);
+		if (check_texture(sign, data) != 0)
+			return (ft_putstr_fd("Error: Duplicate texture identifier\n", 1),
+				1);
+				tmp = tmp + 2;
+				while (*tmp && *tmp == ' ')
+				tmp++;
+				// if (parsing_texture(tmp, sign, data) != 0)
+				// 	return (NULL);
+				// free(tmp);
+				tmp = get_next_line(fd);
+				k++;
+	}
+	close(fd);
+	free(tmp);
+	fd = open(argv, O_RDONLY);
+	 if (fd < 0)
+        return (printf("fd fails on second open\n"), NULL);
 	while ((tmp = get_next_line(fd)) != NULL)
 	{
 		if (tmp[0] == '\n' || tmp[0] == '\0')

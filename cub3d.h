@@ -217,22 +217,6 @@ typedef struct s_game
 	bool			turning_right;
 }					t_game;
 
-typedef struct s_data
-{
-	t_mlx			mlx;
-	t_vec			pos;
-	t_vec			dir;
-	t_vec			plane;
-	t_game			game;
-	void			*img;
-	int				*addr;
-	int				bits_per_pixel;
-	int				line_length;
-	int				endian;
-	t_mapstate		mapstate;
-	int				**map_int;
-}					t_data;
-
 // void				draw_grid(mlx_image_t *img, t_game *game);
 //void				*parsing(char *argv, t_data *data, t_game *game);
 int					parsing(char *argv, t_data *data, t_game *game);
