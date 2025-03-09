@@ -388,11 +388,82 @@ int	parsing(char *argv, t_data *data, t_game *game)
 				tmp = get_next_line(fd);
 				k++;
 	}
+	// close(fd);
+	// free(tmp);
+	// tmp = NULL;
+	// fd = open(argv, O_RDONLY);
+while ((tmp = get_next_line(fd)) != NULL && (tmp[0] == 'C' || tmp[0] == 'F'))
+{
+    printf("tmp1: %s\n", tmp);
+	tmp = get_next_line(fd);
+    printf("tmp1: %s\n", tmp);
+    if ((tmp[0] == 'C' || tmp[0] == 'F') && tmp[1] == ' ') {
+        char identifier = tmp[0];
+        char *line_ptr = tmp + 2; // Use a separate pointer to traverse the string
+
+        // Skip any extra spaces
+        while (*line_ptr == ' ')
+            line_ptr++;
+
+        r = extract_number(&line_ptr);
+        printf("----R----\n");
+        printf("r: %d\n", r);
+        printf("line_ptr: %s\n", line_ptr);
+        if (r < 0 || *line_ptr != ',') {
+            free(tmp);
+            return (printf("wrong color inputs1\n"), 1);
+        }
+        line_ptr++; // Move past ','
+
+        // Skip any extra spaces
+        while (*line_ptr == ' ')
+            line_ptr++;
+
+        g = extract_number(&line_ptr);
+        printf("----G----\n");
+        printf("g: %d\n", g);
+        printf("line_ptr: %s\n", line_ptr);
+        if (g < 0 || *line_ptr != ',') {
+            free(tmp);
+            return (printf("wrong color inputs2\n"), 1);
+        }
+        line_ptr++; // Move past ','
+
+        // Skip any extra spaces
+        while (*line_ptr == ' ')
+            line_ptr++;
+
+        b = extract_number(&line_ptr);
+        printf("----B----\n");
+        printf("b: %d\n", b);
+        printf("line_ptr: %s\n", line_ptr);
+        if (b < 0 || (*line_ptr != '\0' && *line_ptr != '\n')) {
+            free(tmp);
+            return (printf("wrong color inputs3\n"), 1);
+        }
+
+        // Store RGB values
+        game->rgb.r = (unsigned int)r;
+        game->rgb.g = (unsigned int)g;
+        game->rgb.b = (unsigned int)b;
+
+        // Update floor or ceiling color
+        if (identifier == 'C') {
+            game->ceil_color = (r << 16) | (g << 8) | b;
+        } else {
+            game->floor_color = (r << 16) | (g << 8) | b;
+        }
+    } 
+    // free(tmp); // Free the original pointer
+    i = 0;
+    while (tmp[i] == ' ' || tmp[i] == '\t')
+        i++;
+}
 	close(fd);
 	free(tmp);
 	fd = open(argv, O_RDONLY);
 	 if (fd < 0)
-        return (printf("fd fails on second open\n"), NULL);
+        return (printf("fd fails on second open\n"), 1);
 	while ((tmp = get_next_line(fd)) != NULL)
 	{
 		if (tmp[0] == '\n' || tmp[0] == '\0')
