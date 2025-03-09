@@ -349,10 +349,10 @@ int	main(int argc, char **argv)
 	}
 	parsing(argv[1], data, &game);
 	init_window_and_map(data, &game);
-	game_loop(data);
-	mlx_hook(data->mlx.win_ptr, 2, 0, key_press, data);
-	mlx_loop_hook(data->mlx.mlx_ptr, game_loop, data);
-	mlx_loop(data->mlx.mlx_ptr);
-	free(data);
+	// game_loop(data);
+	// mlx_hook(data->mlx.win_ptr, 2, 0, key_press, data);
+	// mlx_loop_hook(data->mlx.mlx_ptr, game_loop, data);
+	// mlx_loop(data->mlx.mlx_ptr);
+	// free(data);
 	return (0);
 }

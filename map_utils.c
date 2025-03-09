@@ -282,6 +282,25 @@ int	check_texture(int sign, t_data *data)
 	return (0);
 }
 
+int extract_number(char **line) {
+    int value = 0;
+
+    while (**line == ' ') (*line)++; // Skip spaces
+
+    if (!ft_isdigit(**line)) return -1; // Ensure it's a digit
+
+    while (ft_isdigit(**line)) { // Convert string to int
+        value = value * 10 + (**line - '0');
+        (*line)++;
+    }
+
+    if (value > 255) return -1; // Ensure valid RGB range
+
+    while (**line == ' ') (*line)++; // Skip spaces
+
+    return value;
+}
+
 void	*parsing(char *argv, t_data *data, t_game *game)
 {
 	int		fd;
@@ -297,7 +316,8 @@ void	*parsing(char *argv, t_data *data, t_game *game)
 	fd = open(argv, O_RDONLY);
 	printf("here: %s\n", argv);
 	if (fd < 0)
-		return (printf("fd fails\n"), NULL);
+		return (printf("fd fails: %s\n", argv),(NULL));
+		
 	data->mlx.mlx_ptr = mlx_init();
 	game->map_h = 0;
 	game->ceil_color = 100000000;
@@ -307,73 +327,140 @@ void	*parsing(char *argv, t_data *data, t_game *game)
 	data->cnv_img2 = NULL;
 	data->cnv_img3 = NULL;
 	data->cnv_img4 = NULL;
+	int r, g, b;
 	h_start = 0;
 	tmp = get_next_line(fd);
-	while (tmp != NULL)
+	int k = 0;
+	while (tmp != NULL && k < 4 )
 	{
-		if (line[0] == 'N' && line[1] == 'O')
+		if (tmp[0] == 'N' && tmp[1] == 'O')
+		{
 			sign = 1;
-		else if (line[0] == 'S' && line[1] == 'O')
+			data->cnv_img2 = mlx_xpm_file_to_image(data->mlx.mlx_ptr,
+				line, &data->tex_w2, &data->tex_h2);
+			}
+		else if (tmp[0] == 'S' && tmp[1] == 'O')
+		{
 			sign = 0;
-		else if (line[0] == 'E' && line[1] == 'A')
-			sign = 2;
-		else if (line[0] == 'W' && line[1] == 'E')
+			data->cnv_img1 = mlx_xpm_file_to_image(data->mlx.mlx_ptr, \
+				line, &data->tex_w1, &data->tex_h1);
+			}
+		else if (tmp[0] == 'E' && tmp[1] == 'A')
+			{
+				sign = 2;
+				data->cnv_img3 = mlx_xpm_file_to_image(data->mlx.mlx_ptr,
+				line, &data->tex_w3, &data->tex_h3);
+			}
+		else if (tmp[0] == 'W' && tmp[1] == 'E')
+		{
 			sign = 3;
+			data->cnv_img4 = mlx_xpm_file_to_image(data->mlx.mlx_ptr,
+				line, &data->tex_w4, &data->tex_h4);
+			}	
 		else
 			return (ft_putstr_fd("Error: Invalid texture identifier\n", 1),
 				NULL);
+		printf("sign: %d\n", sign);
 		if (check_texture(sign, data) != 0)
 			return (ft_putstr_fd("Error: Duplicate texture identifier\n", 1),
 				NULL);
-		tmp = tmp + 2;
-		while (*tmp && *tmp == ' ')
-			tmp++;
-		// if (parsing_texture(tmp, sign, data) != 0)
-		// 	return (NULL);
+				tmp = tmp + 2;
+				while (*tmp && *tmp == ' ')
+				tmp++;
+				// if (parsing_texture(tmp, sign, data) != 0)
+				// 	return (NULL);
+				// free(tmp);
+				tmp = get_next_line(fd);
+				k++;
 	}
-	while (tmp != NULL)
+	// close(fd);
+	// fd = open(argv, O_RDONLY);
+	//  if (fd < 0)
+    //     return (printf("fd fails on second open\n"), NULL);
+	while ((tmp = get_next_line(fd)) != NULL)
 	{
+		printf("tmp1: %s\n", tmp);
+		if ((tmp[0] == 'C' || tmp[0] == 'F') && tmp[1] == ' ') {
+            char identifier = tmp[0];
+            tmp += 2; // Move past 'C ' or 'F '
+
+            r = extract_number(&tmp);
+            if (r < 0 || *tmp != ',') {
+                free(tmp);
+               	return (printf("wrong color inputs\n"), NULL);
+            }
+            tmp++; // Move past ','
+
+            g = extract_number(&tmp);
+            if (g < 0 || *tmp != ',') {
+                free(tmp);
+                return (printf("wrong color inputs\n"), NULL);
+            }
+            tmp++; // Move past ','
+
+            b = extract_number(&tmp);
+            if (b < 0 || (*tmp != '\0' && *tmp != '\n')) {
+                free(tmp);
+                return (printf("wrong color inputs\n"), NULL);
+            }
+
+            // Store RGB values
+            game->rgb.r = (unsigned int)r;
+            game->rgb.g = (unsigned int)g;
+            game->rgb.b = (unsigned int)b;
+
+            // Update floor or ceiling color
+            if (identifier == 'C') {
+                game->ceil_color = (r << 16) | (g << 8) | b;
+            } else {
+                game->floor_color = (r << 16) | (g << 8) | b;
+            }
+        }
+        // free(tmp);
 		i = 0;
 		while (tmp[i] == ' ' || tmp[i] == '\t')
 			i++;
-		if (tmp[i] != '\0')
+		if (tmp[i] != '\0' && tmp[i] == '1')
 		{
-			if (tmp[i] == '1')
-			{
-				j = ft_strlen(tmp) - 1;
-				while (j >= 0 && (tmp[j] == ' ' || tmp[j] == '\t'
-						|| tmp[j] == '\n'))
-					j--;
-				if (j >= 0 && tmp[j] == '1')
-					h_start = 1;
-			}
+			j = ft_strlen(tmp) - 1;
+			while (j >= 0 && (tmp[j] == ' ' || tmp[j] == '\t'
+					|| tmp[j] == '\n'))
+				j--;
+			if (j >= 0 && tmp[j] == '1')
+				break ;
 		}
-		if (h_start)
-			game->map_h++;
-		free(tmp);
-		tmp = get_next_line(fd);
+		// free(tmp);
 	}
 	close(fd);
-	printf("game->map_h: %d\n", game->map_h);
+	fd = open(argv, O_RDONLY);
+    while ((tmp = get_next_line(fd)) != NULL)
+    {
+		printf("tmp2: %s\n", tmp);
+        i = 0;
+        while (tmp[i] == ' ' || tmp[i] == '\t')
+            i++;
+        if (tmp[i] != '\0')
+        {
+            if (tmp[i] == '1')
+            {
+                j = ft_strlen(tmp) - 1;
+                while (j >= 0 && (tmp[j] == ' ' || tmp[j] == '\t'
+                        || tmp[j] == '\n'))
+                    j--;
+                if (j >= 0 && tmp[j] == '1')
+                    h_start = 1;
+            }
+        }
+        if (h_start)
+            game->map_h++;
+        free(tmp);
+    }
+    close(fd); // Close the file descriptor again
+    printf("game->map_h: %d\n", game->map_h);
 	fd = open(argv, O_RDONLY);
 	if (fd < 0)
 		return (printf("fd fails on second open\n"), NULL);
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		i = 0;
-		while (line[i] == ' ' || line[i] == '\t')
-			i++;
-		if (line[i] != '\0' && line[i] == '1')
-		{
-			j = ft_strlen(line) - 1;
-			while (j >= 0 && (line[j] == ' ' || line[j] == '\t'
-					|| line[j] == '\n'))
-				j--;
-			if (j >= 0 && line[j] == '1')
-				break ;
-		}
-		free(line);
-	}
+	
 	game->map_comp = (char **)malloc(sizeof(char *) * game->map_h);
 	if (!game->map_comp)
 	{
