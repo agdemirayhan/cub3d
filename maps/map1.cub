@@ -1,7 +1,7 @@
-NO ./textures/1.jpg
-SO ./textures/2.jpg
-WE ./textures/4.jpg
-EA ./textures/3.jpg
+NO ./textures/1.xpm
+SO ./textures/2.xpm
+WE ./textures/3.xpm
+EA ./textures/4.xpm
 
 F 220,100,0
 C 225,30,0

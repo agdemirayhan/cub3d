@@ -120,7 +120,7 @@ static void	prepare_dda(t_data *data, t_raycast *rc, t_dda *dda_)
 {
 	dda_->map_x = (int)data->pos.x;
 	dda_->map_y = (int)data->pos.y;
-	printf("pos.x = %f, pos.y = %f\n", data->pos.x, data->pos.y);
+	// printf("pos.x = %f, pos.y = %f\n", data->pos.x, data->pos.y);
 	// Ensure delta_dist is never zero to avoid division errors
 	dda_->delta_dist.x = (rc->ray.x == 0) ? 1e30 : fabs(1.0 / rc->ray.x);
 	dda_->delta_dist.y = (rc->ray.y == 0) ? 1e30 : fabs(1.0 / rc->ray.y);
@@ -214,8 +214,8 @@ int	get_color(t_data *data, t_dda *dda_, t_raycast *rc)
 	if (data->texx < 0 || data->texx >= data->tex_w || data->texy < 0
 		|| data->texy >= data->tex_h)
 	{
-		printf("ERROR: Texture coordinates out of bounds! texx = %d, texy = %d, tex_w = %d, tex_h = %d\n", data->texx, data->texy, data->tex_w,
-			data->tex_h);
+		// printf("ERROR: Texture coordinates out of bounds! texx = %d, texy = %d, tex_w = %d, tex_h = %d\n", data->texx, data->texy, data->tex_w,
+		// 	data->tex_h);
 		return (0xFFFFFF); // Return white color as a fallback
 	}
 	// Ensure texture pointers are not NULL
@@ -226,6 +226,9 @@ int	get_color(t_data *data, t_dda *dda_, t_raycast *rc)
 		return (0xFFFFFF); // Return white color as a fallback
 	}
 	// Select the correct texture and fetch the color
+	printf("data->tex_h: %d\n", data->tex_h);
+	printf("data->texy: %d\n", data->texy);
+	printf("data->texx: %d\n", data->texx);
 	if (dda_->side == 0 && rc->ray.x > 0)
 		color = *(data->cnv_addr1 + (data->tex_h * data->texy + data->texx));
 	else if (dda_->side == 0 && rc->ray.x < 0)
@@ -239,23 +242,31 @@ int	get_color(t_data *data, t_dda *dda_, t_raycast *rc)
 
 void	tex_onwhich_side(t_data *data, t_dda *dda_, t_raycast *rc)
 {
+	printf("dda_->side: %d\n", dda_->side);
+printf("rc->ray.x: %f\n", rc->ray.x);
+printf("data->tex_w1: %d\n", data->tex_w1);
+printf("data->tex_h1: %d\n", data->tex_h1);
 	if (dda_->side == 0 && rc->ray.x > 0)
 	{
+		printf("test1\n");
 		data->tex_w = data->tex_w1;
 		data->tex_h = data->tex_h1;
 	}
 	else if (dda_->side == 0 && rc->ray.x < 0)
 	{
+		printf("test2\n");
 		data->tex_w = data->tex_w2;
 		data->tex_h = data->tex_h2;
 	}
 	else if (dda_->side == 1 && rc->ray.y > 0)
 	{
+		printf("test3\n");
 		data->tex_w = data->tex_w3;
 		data->tex_h = data->tex_h3;
 	}
 	else if (dda_->side == 1 && rc->ray.y < 0)
 	{
+		printf("test4\n");
 		data->tex_w = data->tex_w4;
 		data->tex_h = data->tex_h4;
 	}
@@ -272,6 +283,8 @@ void	texture_prep(t_data *data, t_dda *dda_, t_raycast *rc)
 	wallx -= floor(wallx);
 	tex_onwhich_side(data, dda_, rc);
 	data->texx = (int)(wallx * (double)data->tex_w);
+	printf("wallx: %f\n", wallx);
+	printf("data->tex_w: %d\n", data->tex_w);
 	printf("data->texx: %d\n", data->texx);
 	if (dda_->side == 0 && rc->ray.x > 0)
 		data->texx = data->tex_w - data->texx - 1;
@@ -323,7 +336,7 @@ int	game_loop(void *param)
 		if (dda_.draw_end >= WIN_HEIGHT)
 			dda_.draw_end = WIN_HEIGHT - 1;
 		draw_line(data, x, dda_.draw_start);
-		// texture_loop(data, &dda_, &rc, x);
+		texture_loop(data, &dda_, &rc, x);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->img, 0,
@@ -371,10 +384,10 @@ int	main(int argc, char **argv)
 		free(data);
 		return (1);
 	}
-	// game_loop(data);
-	// mlx_hook(data->mlx.win_ptr, 2, 0, key_press, data);
-	// mlx_loop_hook(data->mlx.mlx_ptr, game_loop, data);
-	// mlx_loop(data->mlx.mlx_ptr);
+	game_loop(data);
+	mlx_hook(data->mlx.win_ptr, 2, 0, key_press, data);
+	mlx_loop_hook(data->mlx.mlx_ptr, game_loop, data);
+	mlx_loop(data->mlx.mlx_ptr);
 
 	free(data);
 	return (0);
