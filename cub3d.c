@@ -19,18 +19,35 @@ int	key_press(int keycode, t_data *data)
 	return (0);
 }
 
+int	key_release(int keycode, t_data *data)
+{
+	if (keycode == 13) // 'W'
+		data->mapstate.keycode_fb = 0;
+	else if (keycode == 1) // 'S'
+		data->mapstate.keycode_fb = 0;
+	else if (keycode == 2) // 'D'
+		data->mapstate.keycode_lr = 0;
+	else if (keycode == 0) // 'A'
+		data->mapstate.keycode_lr = 0;
+	else if (keycode == 124) // Right arrow
+		data->mapstate.keycode_r = 0;
+	else if (keycode == 123) // Left arrow
+		data->mapstate.keycode_r = 0;
+	return (0);
+}
+
 void	rotate(t_data *data, int keycode)
 {
 	double	olddirx;
 	double	oldplanex;
 	double	rotation_angle;
 
-	if (keycode == 124) // Right rotation
+	if (keycode == 'R') // Right rotation
 	{
 		data->mapstate.turn_direction = -1;
 		// printf("Rotating right...\n");
 	}
-	else if (keycode == 123) // Left rotation
+	else if (keycode == 'L') // Left rotation
 	{
 		data->mapstate.turn_direction = 1;
 		// printf("Rotating left...\n");
@@ -38,18 +55,13 @@ void	rotate(t_data *data, int keycode)
 	else
 		return ; // Invalid keycode, exit function
 	rotation_angle = data->mapstate.turn_direction * ROTSPEED;
-	data->mapstate.angle += data->mapstate.turn_direction * (ROTSPEED * 180
-			/ M_PI);
+	data->mapstate.angle += data->mapstate.turn_direction * (ROTSPEED * 180 / M_PI);
 	olddirx = data->dir.x;
-	data->dir.x = data->dir.x * cos(rotation_angle) - data->dir.y
-		* sin(rotation_angle);
-	data->dir.y = olddirx * sin(rotation_angle) + data->dir.y
-		* cos(rotation_angle);
+	data->dir.x = data->dir.x * cos(rotation_angle) - data->dir.y * sin(rotation_angle);
+	data->dir.y = olddirx * sin(rotation_angle) + data->dir.y * cos(rotation_angle);
 	oldplanex = data->plane.x;
-	data->plane.x = data->plane.x * cos(rotation_angle) - data->plane.y
-		* sin(rotation_angle);
-	data->plane.y = oldplanex * sin(rotation_angle) + data->plane.y
-		* cos(rotation_angle);
+	data->plane.x = data->plane.x * cos(rotation_angle) - data->plane.y * sin(rotation_angle);
+	data->plane.y = oldplanex * sin(rotation_angle) + data->plane.y * cos(rotation_angle);
 }
 
 // PRINTING THE MOVES
@@ -386,6 +398,7 @@ int	main(int argc, char **argv)
 	}
 	game_loop(data);
 	mlx_hook(data->mlx.win_ptr, 2, 0, key_press, data);
+	mlx_hook(data->mlx.win_ptr, 3, 0, key_release, data);
 	mlx_loop_hook(data->mlx.mlx_ptr, game_loop, data);
 	mlx_loop(data->mlx.mlx_ptr);
 
