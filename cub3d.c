@@ -303,30 +303,57 @@ void	texture_prep(t_data *data, t_dda *dda_, t_raycast *rc)
 	if (dda_->side == 1 && rc->ray.y < 0)
 		data->texx = data->tex_w - data->texx - 1;
 }
-
-void	texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
+void texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
 {
-	double	step;
-	double	texpos;
-	int		y;
-	int		color;
+	double step;
+	double texpos;
+	int y;
+	int color;
 
-	color = 0;
 	texture_prep(data, dda_, rc);
-	step = 1.0 * data->tex_h / dda_->line_height;
-	texpos = (dda_->draw_start - WIN_HEIGHT / 2 + dda_->line_height / 2) * step;
+	step = 1.0 * data->tex_h / (double)dda_->line_height;
+	texpos = (dda_->draw_start - WIN_HEIGHT / 2.0 + dda_->line_height / 2.0) * step;
 	y = dda_->draw_start;
-	while (y < dda_->draw_end + 1)
+	while (y <= dda_->draw_end)
 	{
-		data->texy = (int)texpos & (data->tex_h - 1);
+		if (y < 0 || y >= WIN_HEIGHT)
+		{
+			y++;
+			continue;
+		}
+		data->texy = ((int)texpos) % data->tex_h;
+		if (data->texy < 0)
+			data->texy += data->tex_h;
 		texpos += step;
 		color = get_color(data, dda_, rc);
-		if (dda_->side == 1)
-			color = (color >> 1) & 8355711;
 		data->addr[y * WIN_WIDTH + x] = color;
 		y++;
 	}
 }
+
+//void	texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
+//{
+//	double	step;
+//	double	texpos;
+//	int		y;
+//	int		color;
+
+//	color = 0;
+//	texture_prep(data, dda_, rc);
+//	step = 1.0 * data->tex_h / dda_->line_height;
+//	texpos = (dda_->draw_start - WIN_HEIGHT / 2 + dda_->line_height / 2) * step;
+//	y = dda_->draw_start;
+//	while (y < dda_->draw_end + 1)
+//	{
+//		data->texy = (int)texpos & (data->tex_h - 1);
+//		texpos += step;
+//		color = get_color(data, dda_, rc);
+//		if (dda_->side == 1)
+//			color = (color >> 1) & 8355711;
+//		data->addr[y * WIN_WIDTH + x] = color;
+//		y++;
+//	}
+//}
 
 int	game_loop(void *param)
 {
