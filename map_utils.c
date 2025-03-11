@@ -295,20 +295,20 @@ int	check_texture(int sign, t_data *data)
 
 int extract_number(char **line) {
      int value = 0;
- 
+
      while (**line == ' ') (*line)++; // Skip spaces
- 
+
      if (!ft_isdigit(**line)) return -1; // Ensure it's a digit
- 
+
      while (ft_isdigit(**line)) { // Convert string to int
          value = value * 10 + (**line - '0');
          (*line)++;
      }
- 
+
      if (value > 255) return -1; // Ensure valid RGB range
- 
+
      while (**line == ' ') (*line)++; // Skip spaces
- 
+
      return value;
  }
 
@@ -385,7 +385,7 @@ int	parsing(char *argv, t_data *data, t_game *game)
 				line, &data->tex_w4, &data->tex_h4);
 			data->cnv_addr4 = (int *)mlx_get_data_addr(data->cnv_img4, \
 				&data->cnv_bpp4, &data->cnv_ll4, &data->cnv_en4);
-			}	
+			}
 		else
 			return (ft_putstr_fd("Error: Invalid texture identifier\n", 1),
 				1);
@@ -467,7 +467,7 @@ while ((tmp = get_next_line(fd)) != NULL && (tmp[0] == 'C' || tmp[0] == 'F'))
         } else {
             game->floor_color = (r << 16) | (g << 8) | b;
         }
-    } 
+    }
     // free(tmp); // Free the original pointer
     i = 0;
     while (tmp[i] == ' ' || tmp[i] == '\t')
