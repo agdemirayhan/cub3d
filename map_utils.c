@@ -177,6 +177,8 @@ int	init_window_and_map(t_data *data, t_game *game)
 	}
 	data->addr = (int *)mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
+	data->mapstate.map_width = game->map_l;
+	data->mapstate.map_height = game->map_h;
 	if (!data->addr)
 	{
 		printf("ERROR: mlx_get_data_addr failed!\n");
