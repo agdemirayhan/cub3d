@@ -63,13 +63,9 @@ void	rotate(t_data *data, int keycode)
 		* cos(rotation_angle);
 }
 
-// PRINTING THE MOVES
-void	move_player(t_data *data)
+void	move_functions(t_data *data, double move_dir, double move_side)
 {
-	double	move_dir;
-	double	move_side;
-
-	if (data->mapstate.keycode_fb == 'W' || data->mapstate.keycode_fb == 'S' )
+	if (data->mapstate.keycode_fb == 'W' || data->mapstate.keycode_fb == 'S')
 	{
 		move_dir = (data->mapstate.keycode_fb == 'W') ? 1 : -1;
 		if (data->map_int[(int)(data->pos.x + move_dir * data->dir.x
@@ -89,6 +85,17 @@ void	move_player(t_data *data)
 				* data->plane.y * MOVE_SPEED)] == 0)
 			data->pos.y += move_side * data->plane.y * MOVE_SPEED;
 	}
+}
+
+// PRINTING THE MOVES
+void	move_player(t_data *data)
+{
+	double	move_dir;
+	double	move_side;
+
+	if (data->mapstate.keycode_fb == 'W' || data->mapstate.keycode_fb == 'S'
+		|| data->mapstate.keycode_lr == 'A' || data->mapstate.keycode_lr == 'D')
+		move_functions(data, move_dir, move_side);
 	if (data->mapstate.keycode_r == 'L' || data->mapstate.keycode_r == 'R')
 		rotate(data, data->mapstate.keycode_r);
 }
@@ -211,7 +218,11 @@ int	get_color(t_data *data, t_dda *dda_, t_raycast *rc)
 	// Ensure texture coordinates are within bounds
 	if (data->texx < 0 || data->texx >= data->tex_w || data->texy < 0
 		|| data->texy >= data->tex_h)
+		{
+
+			printf("ERRORRR!\n");
 			return (0xFFFFFF); // Return white color as a fallback
+		}
 	// Ensure texture pointers are not NULL
 	if (!data->cnv_addr1 || !data->cnv_addr2 || !data->cnv_addr3
 		|| !data->cnv_addr4)
@@ -304,6 +315,7 @@ void	texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
 			data->texy += data->tex_h;
 		texpos += step;
 		color = get_color(data, dda_, rc);
+		printf("color: %d\n", color);
 		if (dda_->side == 1)
 			color = (color >> 1) & 8355711;
 		data->addr[y * WIN_WIDTH + x] = color;

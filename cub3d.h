@@ -16,8 +16,8 @@
 # define P3 (3 * M_PI / 2)
 # define MOVE_SPEED 0.1
 # define ROTSPEED 0.05
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 768
 # define X 0
 # define Y 1
 
