@@ -14,8 +14,8 @@
 # define DR (M_PI / 180)
 # define P2 (M_PI / 2)
 # define P3 (3 * M_PI / 2)
-# define MOVE_SPEED 0.05
-# define ROTSPEED 0.03
+# define MOVE_SPEED 0.1
+# define ROTSPEED 0.05
 # define WIN_WIDTH 1920
 # define WIN_HEIGHT 1080
 # define X 0
