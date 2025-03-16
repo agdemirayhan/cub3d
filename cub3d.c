@@ -326,6 +326,8 @@ void texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
 			data->texy += data->tex_h;
 		texpos += step;
 		color = get_color(data, dda_, rc);
+		if (dda_->side == 1)
+			color = (color >> 1) & 8355711;
 		data->addr[y * WIN_WIDTH + x] = color;
 		y++;
 	}
@@ -383,12 +385,20 @@ int	game_loop(void *param)
 	return (0);
 }
 
+void check_leaks(void)
+{
+    char command[256];
+    snprintf(command, sizeof(command), "leaks %d", getpid());
+    system(command);
+}
+
 int	main(int argc, char **argv)
 {
 	t_game	game;
 	t_data	*data;
 	int		i;
 
+	atexit(check_leaks);
 	if (argc != 2)
 	{
 		printf("WRONG! use: ./cub3d <map_file>\n");
