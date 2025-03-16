@@ -42,26 +42,25 @@ void	rotate(t_data *data, int keycode)
 	double	oldplanex;
 	double	rotation_angle;
 
-	if (keycode == 'R') // Right rotation
-	{
+	if (keycode == 'R')
 		data->mapstate.turn_direction = -1;
-		// printf("Rotating right...\n");
-	}
-	else if (keycode == 'L') // Left rotation
-	{
+	else if (keycode == 'L')
 		data->mapstate.turn_direction = 1;
-		// printf("Rotating left...\n");
-	}
 	else
-		return ; // Invalid keycode, exit function
+		return ;
 	rotation_angle = data->mapstate.turn_direction * ROTSPEED;
-	data->mapstate.angle += data->mapstate.turn_direction * (ROTSPEED * 180 / M_PI);
+	data->mapstate.angle += data->mapstate.turn_direction * (ROTSPEED * 180
+			/ M_PI);
 	olddirx = data->dir.x;
-	data->dir.x = data->dir.x * cos(rotation_angle) - data->dir.y * sin(rotation_angle);
-	data->dir.y = olddirx * sin(rotation_angle) + data->dir.y * cos(rotation_angle);
+	data->dir.x = data->dir.x * cos(rotation_angle) - data->dir.y
+		* sin(rotation_angle);
+	data->dir.y = olddirx * sin(rotation_angle) + data->dir.y
+		* cos(rotation_angle);
 	oldplanex = data->plane.x;
-	data->plane.x = data->plane.x * cos(rotation_angle) - data->plane.y * sin(rotation_angle);
-	data->plane.y = oldplanex * sin(rotation_angle) + data->plane.y * cos(rotation_angle);
+	data->plane.x = data->plane.x * cos(rotation_angle) - data->plane.y
+		* sin(rotation_angle);
+	data->plane.y = oldplanex * sin(rotation_angle) + data->plane.y
+		* cos(rotation_angle);
 }
 
 // PRINTING THE MOVES
@@ -70,11 +69,9 @@ void	move_player(t_data *data)
 	double	move_dir;
 	double	move_side;
 
-	// Moving forward ('W') or backward ('S')
-	if (data->mapstate.keycode_fb == 'W' || data->mapstate.keycode_fb == 'S')
+	if (data->mapstate.keycode_fb == 'W' || data->mapstate.keycode_fb == 'S' )
 	{
 		move_dir = (data->mapstate.keycode_fb == 'W') ? 1 : -1;
-		// printf("Moving %s...\n", (move_dir == 1) ? "forward" : "backward");
 		if (data->map_int[(int)(data->pos.x + move_dir * data->dir.x
 				* MOVE_SPEED)][(int)data->pos.y] == 0)
 			data->pos.x += move_dir * data->dir.x * MOVE_SPEED;
@@ -82,11 +79,9 @@ void	move_player(t_data *data)
 				* data->dir.y * MOVE_SPEED)] == 0)
 			data->pos.y += move_dir * data->dir.y * MOVE_SPEED;
 	}
-	// Moving left ('A') or right ('D')
 	if (data->mapstate.keycode_lr == 'A' || data->mapstate.keycode_lr == 'D')
 	{
 		move_side = (data->mapstate.keycode_lr == 'D') ? 1 : -1;
-		// printf("Strafing %s...\n", (move_side == 1) ? "right" : "left");
 		if (data->map_int[(int)(data->pos.x + move_side * data->plane.x
 				* MOVE_SPEED)][(int)data->pos.y] == 0)
 			data->pos.x += move_side * data->plane.x * MOVE_SPEED;
@@ -94,13 +89,8 @@ void	move_player(t_data *data)
 				* data->plane.y * MOVE_SPEED)] == 0)
 			data->pos.y += move_side * data->plane.y * MOVE_SPEED;
 	}
-	// Rotating left ('L') or right ('R')
 	if (data->mapstate.keycode_r == 'L' || data->mapstate.keycode_r == 'R')
-	{
-		// printf("Rotating %s...\n",
-			// (data->mapstate.keycode_r == 'L') ? "left" : "right");
 		rotate(data, data->mapstate.keycode_r);
-	}
 }
 
 void	sidedist_step(t_data *data, t_raycast *rc, t_dda *dda_)
@@ -159,16 +149,11 @@ void	dda(t_data *data, t_raycast *rc, t_dda *dda_)
 		}
 		// **Check Bounds Before Accessing map_int**
 		// printf("data->mapstate.map_width: %d\n", data->mapstate.map_width);
-		if (dda_->map_x < 0 || dda_->map_x >= data->mapstate.map_width
-			|| dda_->map_y < 0 || dda_->map_y >= data->mapstate.map_height)
-		{
-			// printf("ERROR: DDA Out of bounds! map_x = %d, map_y = %d\n",
-				// dda_->map_x, dda_->map_y);
-			break ; // **Exit loop to prevent overflow**
-		}
 		// Check if we hit a wall
 		if (data->map_int[dda_->map_x][dda_->map_y] == 1)
 			dda_->hit = 1;
+		else
+			dda_->hit = 0;
 	}
 	if (dda_->side == X)
 		dda_->perp_wall_dist = (dda_->side_dist.x - dda_->delta_dist.x);
@@ -226,11 +211,7 @@ int	get_color(t_data *data, t_dda *dda_, t_raycast *rc)
 	// Ensure texture coordinates are within bounds
 	if (data->texx < 0 || data->texx >= data->tex_w || data->texy < 0
 		|| data->texy >= data->tex_h)
-	{
-		// printf("ERROR: Texture coordinates out of bounds! texx = %d, texy = %d, tex_w = %d, tex_h = %d\n", data->texx, data->texy, data->tex_w,
-		// 	data->tex_h);
-		return (0xFFFFFF); // Return white color as a fallback
-	}
+			return (0xFFFFFF); // Return white color as a fallback
 	// Ensure texture pointers are not NULL
 	if (!data->cnv_addr1 || !data->cnv_addr2 || !data->cnv_addr3
 		|| !data->cnv_addr4)
@@ -255,10 +236,10 @@ int	get_color(t_data *data, t_dda *dda_, t_raycast *rc)
 
 void	tex_onwhich_side(t_data *data, t_dda *dda_, t_raycast *rc)
 {
-// 	printf("dda_->side: %d\n", dda_->side);
-// printf("rc->ray.x: %f\n", rc->ray.x);
-// printf("data->tex_w1: %d\n", data->tex_w1);
-// printf("data->tex_h1: %d\n", data->tex_h1);
+	// 	printf("dda_->side: %d\n", dda_->side);
+	// printf("rc->ray.x: %f\n", rc->ray.x);
+	// printf("data->tex_w1: %d\n", data->tex_w1);
+	// printf("data->tex_h1: %d\n", data->tex_h1);
 	if (dda_->side == 0 && rc->ray.x > 0)
 	{
 		// printf("test1\n");
@@ -304,24 +285,20 @@ void	texture_prep(t_data *data, t_dda *dda_, t_raycast *rc)
 	if (dda_->side == 1 && rc->ray.y < 0)
 		data->texx = data->tex_w - data->texx - 1;
 }
-void texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
+void	texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
 {
-	double step;
-	double texpos;
-	int y;
-	int color;
+	double	step;
+	double	texpos;
+	int		y;
+	int		color;
 
 	texture_prep(data, dda_, rc);
 	step = 1.0 * data->tex_h / (double)dda_->line_height;
-	texpos = (dda_->draw_start - WIN_HEIGHT / 2.0 + dda_->line_height / 2.0) * step;
+	texpos = (dda_->draw_start - WIN_HEIGHT / 2.0 + dda_->line_height / 2.0)
+		* step;
 	y = dda_->draw_start;
 	while (y <= dda_->draw_end)
 	{
-		if (y < 0 || y >= WIN_HEIGHT)
-		{
-			y++;
-			continue;
-		}
 		data->texy = ((int)texpos) % data->tex_h;
 		if (data->texy < 0)
 			data->texy += data->tex_h;
@@ -334,7 +311,7 @@ void texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
 	}
 }
 
-//void	texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
+// void	texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
 //{
 //	double	step;
 //	double	texpos;
@@ -386,11 +363,12 @@ int	game_loop(void *param)
 	return (0);
 }
 
-void check_leaks(void)
+void	check_leaks(void)
 {
-    char command[256];
-    snprintf(command, sizeof(command), "leaks %d", getpid());
-    system(command);
+	char	command[256];
+
+	snprintf(command, sizeof(command), "leaks %d", getpid());
+	system(command);
 }
 
 int	main(int argc, char **argv)
@@ -439,12 +417,11 @@ int	main(int argc, char **argv)
 	mlx_hook(data.mlx.win_ptr, 3, 0, key_release, &data);
 	mlx_loop_hook(data.mlx.mlx_ptr, game_loop, &data);
 	mlx_loop(data.mlx.mlx_ptr);
-
 	free(&data);
 	return (0);
 }
 
-//int	main(int argc, char **argv)
+// int	main(int argc, char **argv)
 //{
 //	t_game	game;
 //	t_data	*data;
