@@ -31,9 +31,9 @@
 
 typedef struct s_point
 {
-	int	x;
-	int	y;
-}	t_point;
+	int				x;
+	int				y;
+}					t_point;
 
 typedef struct s_mlx
 {
@@ -185,7 +185,7 @@ typedef struct s_rgb
 	unsigned int	r;
 	unsigned int	g;
 	unsigned int	b;
-}	t_rgb;
+}					t_rgb;
 
 typedef struct s_game
 {
@@ -218,7 +218,7 @@ typedef struct s_game
 }					t_game;
 
 // void				draw_grid(mlx_image_t *img, t_game *game);
-//void				*parsing(char *argv, t_data *data, t_game *game);
+// void				*parsing(char *argv, t_data *data, t_game *game);
 int					parsing(char *argv, t_data *data, t_game *game);
 int					init_window_and_map(t_data *data, t_game *game);
 char				**parse_grid(int fd, char *line, t_game *game);
@@ -234,12 +234,17 @@ void				move_up(t_game *game);
 void				move_down(t_game *game);
 void				move_left(t_game *game);
 void				move_right(t_game *game);
-void	flood_fill(char **map_copy, int y, int x, int *is_valid, t_game *game);
-int	validate_map_boundaries(t_game *game);
-void	expand_map_lines(t_game *game);
-int	is_position_valid(t_game *game, int y, int x);
-int	validate_map_structure(t_game *game, t_data *data);
-void	my_fill_heroe_position_1(t_data *data, char *direction);
-void	my_fill_heroe_position(t_game *game, int y, int x, t_data *data);
+void				flood_fill(char **map_copy, int y, int x, int *is_valid,
+						t_game *game);
+int					validate_map_boundaries(t_game *game);
+void				expand_map_lines(t_game *game);
+int					is_position_valid(t_game *game, int y, int x);
+int					validate_map_structure(t_game *game, t_data *data);
+void				my_fill_heroe_position_1(t_data *data, char *direction);
+void				my_fill_heroe_position(t_game *game, int y, int x,
+						t_data *data);
+int					key_press(int keycode, t_data *data);
+int					key_release(int keycode, t_data *data);
+void	move_player(t_data *data);
 
 #endif
