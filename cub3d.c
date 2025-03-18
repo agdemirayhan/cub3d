@@ -256,7 +256,7 @@ int	main(int argc, char **argv)
 	if (parsing(argv[1], &data, &game) != 0)
 	{
 		printf("Error: Map parsing failed. Exiting.\n");
-		free(&data);
+		//free(&data);
 		return (1);
 	}
 	if (init_window_and_map(&data, &game) != 0)
@@ -272,7 +272,7 @@ int	main(int argc, char **argv)
 			}
 			free(game.map_comp);
 		}
-		free(&data);
+		//free(&data);
 		return (1);
 	}
 	game_loop(&data);
@@ -280,7 +280,7 @@ int	main(int argc, char **argv)
 	mlx_hook(data.mlx.win_ptr, 3, 0, key_release, &data);
 	mlx_loop_hook(data.mlx.mlx_ptr, game_loop, &data);
 	mlx_loop(data.mlx.mlx_ptr);
-	free(&data);
+	//free(&data);
 	return (0);
 }
 
