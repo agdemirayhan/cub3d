@@ -245,6 +245,10 @@ void				my_fill_heroe_position(t_game *game, int y, int x,
 						t_data *data);
 int					key_press(int keycode, t_data *data);
 int					key_release(int keycode, t_data *data);
-void	move_player(t_data *data);
+void				move_player(t_data *data);
+
+int					extract_number(char **line);
+int					rgb_values(char *line_ptr, t_rgb *rgb, char *tmp);
+int					rgb_color(char *tmp, t_game *game);
 
 #endif
