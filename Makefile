@@ -1,4 +1,4 @@
-SRCS_LIST = cub3d.c move.c map_utils.c map_check.c hooks.c
+SRCS_LIST = cub3d.c move.c map_utils.c map_check.c hooks.c map_colors.c
 
 SRCS = $(SRCS_LIST)
 OBJDIR = objs
