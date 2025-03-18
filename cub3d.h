@@ -250,5 +250,14 @@ void				move_player(t_data *data);
 int					extract_number(char **line);
 int					rgb_values(char *line_ptr, t_rgb *rgb, char *tmp);
 int					rgb_color(char *tmp, t_game *game);
+void				print_map_int(t_data *data, t_game *game);
+void				print_map_comp(t_game *game);
+
+char				*texture_path(char *tmp);
+int					north_texture(t_data *data, char *path);
+int					south_texture(t_data *data, char *path);
+int					east_texture(t_data *data, char *path);
+int					west_texture(t_data *data, char *path);
+int					which_texture(t_data *data, char *tmp, char *path, int *sign);
 
 #endif
