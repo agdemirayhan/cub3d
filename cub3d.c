@@ -1,6 +1,5 @@
 #include "cub3d.h"
 
-
 void	sidedist_step(t_data *data, t_raycast *rc, t_dda *dda_)
 {
 	if (rc->ray.x < 0)
