@@ -259,5 +259,16 @@ int					south_texture(t_data *data, char *path);
 int					east_texture(t_data *data, char *path);
 int					west_texture(t_data *data, char *path);
 int					which_texture(t_data *data, char *tmp, char *path, int *sign);
+int					load_textures(int fd, t_data *data);
+
+int					check_file_type(char *argv);
+int					load_textures(int fd, t_data *data);
+void				init_game_data(t_data *data, t_game *game);
+void				free_map_data(t_game *game, int i, char *line, int fd);
+void				free_map_array(t_game *game);
+
+int					process_map_line(t_game *game, char *line, int *i, int *map_start);
+int					count_map_lines(char *argv, t_game *game);
+int					load_map_file(char *argv, t_data *data, t_game *game);
 
 #endif

@@ -72,13 +72,8 @@ char	**parse_grid(int fd, char *line, t_game *game)
 			if (grid[i][j] == 'N' || grid[i][j] == 'S' || grid[i][j] == 'E'
 				|| grid[i][j] == 'W')
 			{
-				// game->posx = j * SQUARE_SIZE + (SQUARE_SIZE / 2 - 10 / 2);
-				// game->posy = i * SQUARE_SIZE + (SQUARE_SIZE / 2 - 10 / 2);
-				//game->posx = j * SQUARE_SIZE;
-				//game->posy = i * SQUARE_SIZE;
 				game->posx = j * SQUARE_SIZE + (SQUARE_SIZE / 2);
 				game->posy = i * SQUARE_SIZE + (SQUARE_SIZE / 2);
-				//grid[i][j] = '0';
 				if (grid[i][j] == 'N')
 					game->angle = -PI/2;
 				else if (grid[i][j] == 'S')
@@ -106,7 +101,9 @@ char	**parse_grid(int fd, char *line, t_game *game)
 
 int	allocate_map_memory(t_data *data, t_game *game)
 {
-	unsigned int i, j;
+	unsigned int i;
+	unsigned int j;
+
 	if (game->map_h <= 0 || game->map_l <= 0)
 	{
 		printf("ERROR: Invalid map dimensions! map_h=%d, map_l=%d\n",
@@ -116,20 +113,25 @@ int	allocate_map_memory(t_data *data, t_game *game)
 	data->map_int = malloc(sizeof(int *) * game->map_h);
 	if (!data->map_int)
 		return (1);
-	for (i = 0; i < game->map_h; i++)
+	i = 0;
+	while (i < game->map_h)
 	{
 		data->map_int[i] = malloc(sizeof(int) * game->map_l);
 		if (!data->map_int[i])
 		{
 			printf("ERROR: Memory allocation failed at row %d\n", i);
-			// Free allocated rows before returning
 			while (i > 0)
 				free(data->map_int[--i]);
 			free(data->map_int);
 			return (1);
 		}
-		for (j = 0; j < game->map_l; j++)
+		j = 0;
+		while (j < game->map_l)
+		{
 			data->map_int[i][j] = -1;
+			j++;
+		}
+		i++;
 	}
 	return (0);
 }
