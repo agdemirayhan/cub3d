@@ -272,6 +272,10 @@ int					process_map_line(t_game *game, char *line, int *i,
 						int *map_start);
 int					count_map_lines(char *argv, t_game *game);
 int					load_map_file(char *argv, t_data *data, t_game *game);
+void				texture_loop(t_data *data, t_dda *dda_, t_raycast *rc,
+						int x);
+int					get_color(t_data *data, t_dda *dda_, t_raycast *rc);
+void	raycast_helper(t_data *data, t_raycast *rc, t_dda *dda_, int x);
 
 # ifndef LEAKS
 #  define LEAKS 0
