@@ -10,7 +10,7 @@ NAME = cube3d
 
 # ------------------------------ COMPILATION ------------------------------
 CC = cc
-FLAGS = -fsanitize=address
+CFLAGS = -fsanitize=address
 # FLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
@@ -31,10 +31,10 @@ else  # Linux
 endif
 
 # ------------------------------ BUILD RULES ------------------------------
-all: $(NAME)
+all: submodule $(NAME)
 
 $(NAME): $(OBJS) | $(LIBFT) $(MLX_LIB) $(GNL_LIB)
-	$(CC) $(FLAGS) $(LIBFT) $(GNL_LIB) $(MLX_FLAGS) $(OBJS) -o $(NAME)
+	$(CC) $(CFLAGS) $(LIBFT) $(GNL_LIB) $(MLX_FLAGS) $(OBJS) -o $(NAME)
 
 $(LIBFT):
 	@make -C libft
@@ -49,7 +49,7 @@ $(OBJDIR):
 	@mkdir -p $(OBJDIR)
 
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
-	$(CC) $(FLAGS) $(MLX_INCLUDE) $(GNL_INCLUDE) -c $< -o $@
+	$(CC) $(CFLAGS) $(MLX_INCLUDE) $(GNL_INCLUDE) -c $< -o $@
 
 # ------------------------------ CLEAN RULES ------------------------------
 clean:
@@ -65,5 +65,20 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+leaks: $(MAKE) clean_objs
+	$(MAKE) CFLAGS="$(CFLAGS) -g -DLEAKS" all
+
+clean_objs:
+	$(RM) $(OBJS)
+
+submodule:
+	@if [ ! -f "./libft/.git" ] && [ ! -d "./libft/.git" ]; then \
+		echo "libft submodule not found. Initializing and updating libft submodule..."; \
+		git submodule update --init --recursive libft; \
+	else \
+		echo "libft submodule already initialized. Updating libft submodule..."; \
+		git submodule update --remote libft; \
+	fi
 
 .PHONY: all clean fclean re

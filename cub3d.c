@@ -233,45 +233,39 @@ void	check_leaks(void)
 	system(command);
 }
 
+void	free_gamecomp(t_game *game)
+{
+	int	i;
+
+	{
+		i = 0;
+		while (i < game->map_h)
+		{
+			free(game->map_comp[i]);
+			i++;
+		}
+		free(game->map_comp);
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_game	game;
 	t_data	data;
-	int		i;
 
-	// atexit(check_leaks);
+	printf("LEAKS:%d\n",LEAKS);
+	if (LEAKS)
+		atexit(check_leaks);
 	if (argc != 2)
-	{
-		printf("WRONG! use: ./cub3d <map_file>\n");
-		return (1);
-	}
-	// data = malloc(sizeof(t_data));
-	// if (!data)
-	// {
-	// 	printf("Memory allocation failed!\n");
-	// 	return (1);
-	// }
+		return (printf("WRONG! use: ./cub3d <map_file>\n"), 1);
 	ft_memset(&game, 0, sizeof(t_game));
 	if (parsing(argv[1], &data, &game) != 0)
-	{
-		printf("Error: Map parsing failed. Exiting.\n");
-		//free(&data);
-		return (1);
-	}
+		return (printf("Error: Map parsing failed. Exiting.\n"), 1);
 	if (init_window_and_map(&data, &game) != 0)
 	{
 		printf("Error: Failed to initialize window or map. Exiting.\n");
 		if (game.map_comp)
-		{
-			i = 0;
-			while (i < game.map_h)
-			{
-				free(game.map_comp[i]);
-				i++;
-			}
-			free(game.map_comp);
-		}
-		//free(&data);
+			free_gamecomp(&game);
 		return (1);
 	}
 	game_loop(&data);
@@ -279,7 +273,6 @@ int	main(int argc, char **argv)
 	mlx_hook(data.mlx.win_ptr, 3, 0, key_release, &data);
 	mlx_loop_hook(data.mlx.mlx_ptr, game_loop, &data);
 	mlx_loop(data.mlx.mlx_ptr);
-	//free(&data);
 	return (0);
 }
 
