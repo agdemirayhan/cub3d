@@ -6,6 +6,11 @@ int	extract_number(char **line)
 
 	while (**line == ' ')
 		(*line)++;
+	if (**line == '-')
+	{
+		printf("Error: Color values cannot be negative\n");
+		exit(1);
+	}
 	if (!ft_isdigit(**line))
 		return -1;
 	while (ft_isdigit(**line))
@@ -13,11 +18,14 @@ int	extract_number(char **line)
 		value = value * 10 + (**line - '0');
 		(*line)++;
 		if (value > 255)
-			return -1;
+		{
+			printf("Error: Color value must be between 0 and 255\n");
+			exit(1);
+		}
 	}
 	while (**line == ' ')
 	(*line)++;
-	return value;
+	return (value);
 }
 
 int	rgb_values(char *line_ptr, t_rgb *rgb, char *tmp)
