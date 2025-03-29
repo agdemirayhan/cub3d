@@ -49,8 +49,8 @@ typedef struct s_vec
 
 typedef struct s_mapstate
 {
-	unsigned int	map_width;
-	unsigned int	map_height;
+	int	map_width;
+	int	map_height;
 	int				keycode_fb;
 	int				keycode_r;
 	int				keycode_lr;
@@ -64,8 +64,8 @@ typedef struct s_mapstate
 
 // typedef struct s_mapstate
 // {
-// 	unsigned int	map_width;
-// 	unsigned int	map_height;
+// 	int	map_width;
+// 	int	map_height;
 // 	int				keycode_fb;
 // 	int				keycode_r;
 // 	int				keycode_lr;
@@ -86,8 +86,8 @@ typedef struct s_data
 	int				endian;
 	t_mapstate		mapstate;
 	int				**map_int;
-	unsigned int	ceil_color;
-	unsigned int	floor_color;
+	int	ceil_color;
+	int	floor_color;
 	int				tex_w;
 	int				tex_h;
 	int				tex_w1;
@@ -182,9 +182,9 @@ typedef struct s_raycast
 
 typedef struct s_rgb
 {
-	unsigned int	r;
-	unsigned int	g;
-	unsigned int	b;
+	int	r;
+	int	g;
+	int	b;
 }					t_rgb;
 
 typedef struct s_game
@@ -193,8 +193,8 @@ typedef struct s_game
 	// mlx_image_t		*img;
 	t_map			map;
 	// mlx_image_t		*ray;
-	int				map_h;
-	int				map_l;
+	int	map_h;
+	int	map_l;
 	char			**map_comp;
 	int				grid_width;
 	int				grid_height;
@@ -204,9 +204,9 @@ typedef struct s_game
 	int				posx;
 	int				posy;
 	double			angle;
-	unsigned int	ceil_color;
-	unsigned int	floor_color;
-	unsigned int	map_h_tmp;
+	int	ceil_color;
+	int	floor_color;
+	int	map_h_tmp;
 	// mlx_key_data_t	last_key_data;
 
 	bool			is_moving_up;
@@ -276,6 +276,7 @@ void				texture_loop(t_data *data, t_dda *dda_, t_raycast *rc,
 						int x);
 int					get_color(t_data *data, t_dda *dda_, t_raycast *rc);
 void	raycast_helper(t_data *data, t_raycast *rc, t_dda *dda_, int x);
+int	key_press(int keycode, t_data *data);
 
 # ifndef LEAKS
 #  define LEAKS 0

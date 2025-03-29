@@ -1,4 +1,16 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycast_helper.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/29 18:40:35 by aagdemir          #+#    #+#             */
+/*   Updated: 2025/03/29 18:41:43 by aagdemir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../cub3d.h"
 
 void	sidedist_step(t_data *data, t_raycast *rc, t_dda *dda_)
 {
@@ -25,12 +37,19 @@ void	sidedist_step(t_data *data, t_raycast *rc, t_dda *dda_)
 			* dda_->delta_dist.y;
 	}
 }
+
 static void	prepare_dda(t_data *data, t_raycast *rc, t_dda *dda_)
 {
 	dda_->map_x = (int)data->pos.x;
 	dda_->map_y = (int)data->pos.y;
-	dda_->delta_dist.x = (rc->ray.x == 0) ? 1e30 : fabs(1.0 / rc->ray.x);
-	dda_->delta_dist.y = (rc->ray.y == 0) ? 1e30 : fabs(1.0 / rc->ray.y);
+	if (rc->ray.x == 0)
+		dda_->delta_dist.x = 1e30;
+	else
+		dda_->delta_dist.x = fabs(1.0 / rc->ray.x);
+	if (rc->ray.y == 0)
+		dda_->delta_dist.y = 1e30;
+	else
+		dda_->delta_dist.y = fabs(1.0 / rc->ray.y);
 	sidedist_step(data, rc, dda_);
 }
 
