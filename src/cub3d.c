@@ -1,4 +1,16 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/29 18:17:16 by aagdemir          #+#    #+#             */
+/*   Updated: 2025/03/29 19:02:19 by aagdemir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../cub3d.h"
 
 void	draw_line(t_data *data, int x, int draw_start)
 {
@@ -34,7 +46,6 @@ int	game_loop(void *param)
 	int			x;
 	t_raycast	rc;
 	t_dda		dda_;
-	int			y;
 
 	x = 0;
 	data = (t_data *)param;

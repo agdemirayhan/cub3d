@@ -1,9 +1,10 @@
-#include "cub3d.h"
+#include "../cub3d.h"
 
 int	extract_number(char **line)
 {
-	int value = 0;
+	int	value;
 
+	value = 0;
 	while (**line == ' ')
 		(*line)++;
 	if (**line == '-')
@@ -12,7 +13,7 @@ int	extract_number(char **line)
 		exit(1);
 	}
 	if (!ft_isdigit(**line))
-		return -1;
+		return (-1);
 	while (ft_isdigit(**line))
 	{
 		value = value * 10 + (**line - '0');
@@ -24,7 +25,7 @@ int	extract_number(char **line)
 		}
 	}
 	while (**line == ' ')
-	(*line)++;
+		(*line)++;
 	return (value);
 }
 
@@ -59,9 +60,9 @@ int	rgb_values(char *line_ptr, t_rgb *rgb, char *tmp)
 
 int	rgb_color(char *tmp, t_game *game)
 {
-	char	identifier;
-	char	*line_ptr;
-	t_rgb	rgb;
+	char identifier;
+	char *line_ptr;
+	t_rgb rgb;
 
 	identifier = tmp[0];
 	line_ptr = tmp + 2;
@@ -73,6 +74,7 @@ int	rgb_color(char *tmp, t_game *game)
 		game->ceil_color = (rgb.r << 16) | (rgb.g << 8) | rgb.b;
 	else if (identifier == 'F')
 		game->floor_color = (rgb.r << 16) | (rgb.g << 8) | rgb.b;
-	printf("Parsed %c color: R=%d, G=%d, B=%d\n", identifier, rgb.r, rgb.g, rgb.b);
+	printf("Parsed %c color: R=%d, G=%d, B=%d\n", identifier, rgb.r, rgb.g,
+		rgb.b);
 	return (0);
 }

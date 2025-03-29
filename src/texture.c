@@ -1,4 +1,16 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/29 18:42:02 by aagdemir          #+#    #+#             */
+/*   Updated: 2025/03/29 18:51:31 by aagdemir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../cub3d.h"
 
 int	get_color(t_data *data, t_dda *dda_, t_raycast *rc)
 {
@@ -68,10 +80,10 @@ void	texture_prep(t_data *data, t_dda *dda_, t_raycast *rc)
 
 void	texture_loop(t_data *data, t_dda *dda_, t_raycast *rc, int x)
 {
-	double step;
-	double texpos;
-	int y;
-	int color;
+	double	step;
+	double	texpos;
+	int		y;
+	int		color;
 
 	texture_prep(data, dda_, rc);
 	step = 1.0 * data->tex_h / (double)dda_->line_height;

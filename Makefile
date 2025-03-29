@@ -1,8 +1,8 @@
 SRCS_LIST = cub3d.c move.c map_utils.c map_check.c hooks.c map_colors.c \
-			map_parse.c map_textures.c map_which_textures.c map_loading.c \
-			map_parse_utils.c texture.c raycast_helper.c
+            map_parse.c map_textures.c map_which_textures.c map_loading.c \
+            map_parse_utils.c texture.c raycast_helper.c hooks2.c
 
-SRCS = $(SRCS_LIST)
+SRCS = $(addprefix src/, $(SRCS_LIST))
 OBJDIR = objs
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS_LIST:.c=.o))
 
@@ -10,13 +10,13 @@ NAME = cube3d
 
 # ------------------------------ COMPILATION ------------------------------
 CC = cc
-CFLAGS = -fsanitize=address
-# FLAGS = -Wall -Wextra -Werror
+# CFLAGS = -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
 # ------------------------------ LIBRARIES ------------------------------
 LIBFT = libft/libft.a
-MLX_DIR = minilibx
+MLX_DIR = libft/minilibx
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX_INCLUDE = -I$(MLX_DIR)
 
@@ -25,9 +25,9 @@ GNL_LIB = $(GNL_DIR)/get_next_line.a
 GNL_INCLUDE = -I$(GNL_DIR)
 
 ifeq ($(shell uname), Darwin)  # macOS
-	MLX_FLAGS = -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
+    MLX_FLAGS = -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
 else  # Linux
-	MLX_FLAGS = -L$(MLX_DIR) -lmlx -lX11 -lXext -lm -lbsd
+    MLX_FLAGS = -L$(MLX_DIR) -lmlx -lX11 -lXext -lm -lbsd
 endif
 
 # ------------------------------ BUILD RULES ------------------------------
@@ -48,7 +48,7 @@ $(GNL_LIB):
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)
 
-$(OBJDIR)/%.o: %.c | $(OBJDIR)
+$(OBJDIR)/%.o: src/%.c | $(OBJDIR)
 	$(CC) $(CFLAGS) $(MLX_INCLUDE) $(GNL_INCLUDE) -c $< -o $@
 
 # ------------------------------ CLEAN RULES ------------------------------

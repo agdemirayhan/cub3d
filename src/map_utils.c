@@ -1,4 +1,4 @@
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	free_map(t_map *map)
 {
@@ -55,8 +55,8 @@ char	**parse_grid(int fd, char *line, t_game *game)
 {
 	char	**grid;
 	char	*newline;
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 0;
 	grid = malloc(sizeof(char *) * 1024);
@@ -75,20 +75,17 @@ char	**parse_grid(int fd, char *line, t_game *game)
 				game->posx = j * SQUARE_SIZE + (SQUARE_SIZE / 2);
 				game->posy = i * SQUARE_SIZE + (SQUARE_SIZE / 2);
 				if (grid[i][j] == 'N')
-					game->angle = -PI/2;
+					game->angle = -PI / 2;
 				else if (grid[i][j] == 'S')
-					game->angle = PI/2;
+					game->angle = PI / 2;
 				else if (grid[i][j] == 'E')
 					game->angle = 0;
 				else if (grid[i][j] == 'W')
 					game->angle = PI;
 				grid[i][j] = '0';
-				if (game->posx < 1 || game->posx >= game->map_l - 1
-					|| game->posy < 1 || game->posy >= game->map_h - 1)
-				{
-					printf("ERROR: Player placed too close to the edge! posx = %d, posy = %d\n", game->posx, game->posy);
+				if (game->posx < 1 || game->posx >= (int)game->map_l - 1
+					|| game->posy < 1 || game->posy >= (int)game->map_h - 1)
 					exit(1);
-				}
 			}
 			j++;
 		}
@@ -101,8 +98,8 @@ char	**parse_grid(int fd, char *line, t_game *game)
 
 int	allocate_map_memory(t_data *data, t_game *game)
 {
-	unsigned int i;
-	unsigned int j;
+	int	i;
+	int	j;
 
 	if (game->map_h <= 0 || game->map_l <= 0)
 	{
@@ -138,7 +135,7 @@ int	allocate_map_memory(t_data *data, t_game *game)
 
 void	convert_map_to_int(t_data *data, t_game *game)
 {
-	unsigned int i, j;
+	int i, j;
 	for (i = 0; i < game->map_h; i++)
 	{
 		for (j = 0; j < game->map_l && game->map_comp[i][j] != '\0'; j++)
@@ -153,7 +150,7 @@ void	convert_map_to_int(t_data *data, t_game *game)
 
 void	print_map_int(t_data *data, t_game *game)
 {
-	unsigned int i, j;
+	int i, j;
 	printf("Map Integer Representation:\n");
 	for (i = 0; i < game->map_h; i++)
 	{
@@ -186,7 +183,6 @@ int	init_window_and_map(t_data *data, t_game *game)
 		printf("ERROR: mlx_get_data_addr failed!\n");
 		return (1);
 	}
-	// Allocate and convert the map
 	data->floor_color = game->floor_color;
 	data->ceil_color = game->ceil_color;
 	if (allocate_map_memory(data, game))
@@ -196,7 +192,6 @@ int	init_window_and_map(t_data *data, t_game *game)
 	return (0);
 }
 
-// TEMP printer
 void	print_map_comp(t_game *game)
 {
 	int	i;
@@ -262,33 +257,6 @@ void	my_fill_heroe_position(t_game *game, int y, int x, t_data *data)
 	my_fill_heroe_position_1(data, direction);
 }
 
-static int	my_check_chars_and_heroes(t_game *game, t_data *data)
-{
-	unsigned int	i;
-	int				j;
-	int				qty_heroes;
-
-	qty_heroes = 0;
-	i = -1;
-	while (++i < game->map_h)
-	{
-		j = -1;
-		while (game->map_comp[i][++j] != '\0')
-		{
-			if (!ft_strchr(" 01NSEW", game->map_comp[i][j]))
-				return (printf("Error: Invalid character in map\n"), 1);
-			if (ft_strchr("NSEW", game->map_comp[i][j]))
-			{
-				if (qty_heroes > 0)
-					return (printf("Error: More than one hero in map\n"), 1);
-				qty_heroes = 1;
-				my_fill_heroe_position(game, i, j, data);
-			}
-		}
-	}
-	return (0);
-}
-
 int	check_texture(int sign, t_data *data)
 {
 	void	*textures[] = {data->cnv_img1, data->cnv_img2, data->cnv_img3,
@@ -318,37 +286,63 @@ void	calculate_grid_size(t_map *map, int *grid_width, int *grid_height)
 	*grid_height = height;
 }
 
-void draw_grid(void *mlx_ptr, void *win_ptr, t_game *game)
+static void	draw_player(void *mlx_ptr, void *win_ptr, t_game *game)
 {
-	if (!game || !game->map_comp)
-	{
-		printf("Error: Invalid game or map structure\n");
-		return ;
-	}
+	int	player_size;
+	int	i;
+	int	j;
 
-	// Draw map walls
-	int y = 0;
+	player_size = 8;
+	i = -player_size / 2;
+	int px, py;
+	while (i < player_size / 2)
+	{
+		j = -player_size / 2;
+		while (j < player_size / 2)
+		{
+			px = game->posx + i;
+			py = game->posy + j;
+			if (px >= 0 && px < game->window_width && py >= 0
+				&& py < game->window_height)
+			{
+				mlx_pixel_put(mlx_ptr, win_ptr, px, py, 0xFF00FF);
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+void	draw_grid(void *mlx_ptr, void *win_ptr, t_game *game)
+{
+	int	y;
+	int	x;
+	int	start_x;
+	int	start_y;
+	int	i;
+	int	j;
+
+
+	if (!game || !game->map_comp)
+		return ;
+	y = 0;
 	while (y < game->map_h)
 	{
-		int x = 0;
+		x = 0;
 		while (x < game->map_l)
 		{
 			if (game->map_comp[y] && game->map_comp[y][x] == '1')
 			{
-				// Draw wall square
-				int start_x = x * SQUARE_SIZE;
-				int start_y = y * SQUARE_SIZE;
-
-				int i = 0;
+				start_x = x * SQUARE_SIZE;
+				start_y = y * SQUARE_SIZE;
+				i = 0;
 				while (i < SQUARE_SIZE)
 				{
-					int j = 0;
+					j = 0;
 					while (j < SQUARE_SIZE)
 					{
-						mlx_pixel_put(mlx_ptr, win_ptr,
-							start_x + i,
-							start_y + j,
-							0xFFFFFF);
+						mlx_pixel_put(mlx_ptr, win_ptr, start_x + i, start_y
+							+ j, 0xFFFFFF);
 						j++;
 					}
 					i++;
@@ -358,82 +352,7 @@ void draw_grid(void *mlx_ptr, void *win_ptr, t_game *game)
 		}
 		y++;
 	}
-
-	// Verify player position
-	if (game->posx >= 0 && game->posx < game->window_width &&
-		game->posy >= 0 && game->posy < game->window_height)
-	{
-		// Draw player
-		int player_size = 8;
-		int i = -player_size / 2;
-		while (i < player_size / 2)
-		{
-			int j = -player_size / 2;
-			while (j < player_size / 2)
-			{
-				int px = game->posx + i;
-				int py = game->posy + j;
-
-				if (px >= 0 && px < game->window_width &&
-					py >= 0 && py < game->window_height)
-				{
-					mlx_pixel_put(mlx_ptr, win_ptr, px, py, 0xFF00FF);
-				}
-				j++;
-			}
-			i++;
-		}
-	}
-	else
-	{
-		printf("Error: wrong position: x=%d, y=%d\n",
-			game->posx, game->posy);
-	}
+	if (game->posx >= 0 && game->posx < game->window_width && game->posy >= 0
+		&& game->posy < game->window_height)
+	draw_player(mlx_ptr, win_ptr, game);
 }
-
-//void	draw_grid(void *mlx_ptr, void *win_ptr, t_game *game)
-//{
-//	int	x;
-//	int	y;
-
-//	y = 0;
-//	while (y < game->map_h)
-//	{
-//		x = 0;
-//		while (x < game->map_l)
-//		{
-//			if (game->map.grid[y][x] == '1')
-//			{
-//				int i, j;
-//				for (i = 0; i < SQUARE_SIZE; i++)
-//				{
-//					for (j = 0; j < SQUARE_SIZE; j++)
-//					{
-//						mlx_pixel_put(mlx_ptr, win_ptr, x * SQUARE_SIZE + i, y * SQUARE_SIZE + j, 0xFFFFFF);
-//					}
-//				}
-//			}
-//			x++;
-//		}
-//		y++;
-//	}
-//	int player_size = 8; // Make player more visible
-//	int px = game->posx - player_size/2;
-//	int py = game->posy - player_size/2;
-
-//	for (int i = 0; i < player_size; i++) {
-//		for (int j = 0; j < player_size; j++) {
-//			mlx_pixel_put(mlx_ptr, win_ptr, px + i, py + j, 0xFF0000);
-//		}
-//	}
-
-//	// Draw direction line to show where player is facing
-//	int line_length = 20;
-//	int end_x = game->posx + cos(game->angle) * line_length;
-//	int end_y = game->posy + sin(game->angle) * line_length;
-//	for (int i = 0; i < line_length; i++) {
-//		int x = game->posx + cos(game->angle) * i;
-//		int y = game->posy + sin(game->angle) * i;
-//		mlx_pixel_put(mlx_ptr, win_ptr, x, y, 0xFF0000);
-//	}
-//}

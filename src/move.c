@@ -6,11 +6,11 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 18:38:04 by aagdemir          #+#    #+#             */
-/*   Updated: 2025/03/16 18:38:07 by aagdemir         ###   ########.fr       */
+/*   Updated: 2025/03/29 18:28:23 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	move_up(t_game *game)
 {
