@@ -3,6 +3,7 @@
 static int	process_color(int fd, t_game *game)
 {
 	char	*tmp;
+	int		result;
 
 	tmp = get_next_line(fd);
 	while (tmp != NULL)
@@ -10,9 +11,9 @@ static int	process_color(int fd, t_game *game)
 		printf("tmp1: %s\n", tmp);
 		if ((tmp[0] == 'F' || tmp[0] == 'C') && tmp[1] == ' ')
 		{
-			if (rgb_color(tmp, game))
+			result = rgb_color(tmp, game);
+			if (result)
 			{
-				free(tmp);
 				return (1);
 			}
 		}
