@@ -1,7 +1,7 @@
 SRCS_LIST = cub3d.c move.c map_utils.c map_check.c hooks.c map_colors.c \
             map_parse.c map_textures.c map_which_textures.c map_loading.c \
             map_parse_utils.c texture.c raycast_helper.c hooks2.c map_boundry.c \
-			map_expand.c
+			map_expand.c map_dim.c map_utils_1.c
 
 SRCS = $(addprefix src/, $(SRCS_LIST))
 OBJDIR = objs
