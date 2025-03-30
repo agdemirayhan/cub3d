@@ -25,8 +25,8 @@
 #  define SQUARE_SIZE 64
 # endif
 
-# ifndef QUEUE_SIZE
-#  define QUEUE_SIZE 10000
+# ifndef TEX_COUNT
+#  define TEX_COUNT 4
 # endif
 
 typedef struct s_point
@@ -294,6 +294,7 @@ void				texture_loop(t_data *data, t_dda *dda_, t_raycast *rc,
 int					get_color(t_data *data, t_dda *dda_, t_raycast *rc);
 void	raycast_helper(t_data *data, t_raycast *rc, t_dda *dda_, int x);
 int	key_press(int keycode, t_data *data);
+int	allocate_map_memory(t_data *data, t_game *game);
 
 # ifndef LEAKS
 #  define LEAKS 0
