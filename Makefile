@@ -1,6 +1,7 @@
 SRCS_LIST = cub3d.c move.c map_utils.c map_check.c hooks.c map_colors.c \
             map_parse.c map_textures.c map_which_textures.c map_loading.c \
-            map_parse_utils.c texture.c raycast_helper.c hooks2.c
+            map_parse_utils.c texture.c raycast_helper.c hooks2.c map_boundry.c \
+			map_expand.c
 
 SRCS = $(addprefix src/, $(SRCS_LIST))
 OBJDIR = objs
@@ -77,7 +78,7 @@ submodule:
 		echo "libft submodule not found. Initializing and updating libft submodule..."; \
 		git submodule update --init --recursive libft; \
 	else \
-		echo "libft submodule already initialized. Updating libft submodule..."; \
+		echo "libft submodule already initialized."; \
 		git submodule update --remote libft; \
 	fi
 

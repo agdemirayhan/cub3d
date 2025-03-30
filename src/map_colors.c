@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_colors.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/30 17:11:10 by msoklova          #+#    #+#             */
+/*   Updated: 2025/03/30 17:11:36 by msoklova         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 int	extract_number(char **line)
@@ -60,9 +72,9 @@ int	rgb_values(char *line_ptr, t_rgb *rgb, char *tmp)
 
 int	rgb_color(char *tmp, t_game *game)
 {
-	char identifier;
-	char *line_ptr;
-	t_rgb rgb;
+	char	identifier;
+	char	*line_ptr;
+	t_rgb	rgb;
 
 	identifier = tmp[0];
 	line_ptr = tmp + 2;
