@@ -49,18 +49,18 @@ typedef struct s_vec
 
 typedef struct s_mapstate
 {
-	int	map_width;
-	int	map_height;
-	int				keycode_fb;
-	int				keycode_r;
-	int				keycode_lr;
-	double			rot;
-	int				prev_keycode_fb;
-	int				prev_keycode_r;
-	int				prev_keycode_lr;
-	int				turn_direction;
-	int				angle;
-}					t_mapstate;
+	int		map_width;
+	int		map_height;
+	int		keycode_fb;
+	int		keycode_r;
+	int		keycode_lr;
+	double	rot;
+	int		prev_keycode_fb;
+	int		prev_keycode_r;
+	int		prev_keycode_lr;
+	int		turn_direction;
+	int		angle;
+}			t_mapstate;
 
 // typedef struct s_mapstate
 // {
@@ -86,8 +86,8 @@ typedef struct s_data
 	int				endian;
 	t_mapstate		mapstate;
 	int				**map_int;
-	int	ceil_color;
-	int	floor_color;
+	int				ceil_color;
+	int				floor_color;
 	int				tex_w;
 	int				tex_h;
 	int				tex_w1;
@@ -193,8 +193,8 @@ typedef struct s_game
 	// mlx_image_t		*img;
 	t_map			map;
 	// mlx_image_t		*ray;
-	int	map_h;
-	int	map_l;
+	int				map_h;
+	int				map_l;
 	char			**map_comp;
 	int				grid_width;
 	int				grid_height;
@@ -204,11 +204,10 @@ typedef struct s_game
 	int				posx;
 	int				posy;
 	double			angle;
-	int	ceil_color;
-	int	floor_color;
-	int	map_h_tmp;
+	int				ceil_color;
+	int				floor_color;
+	int				map_h_tmp;
 	// mlx_key_data_t	last_key_data;
-
 	bool			is_moving_up;
 	bool			is_moving_down;
 	bool			is_moving_left;
@@ -226,11 +225,10 @@ typedef struct s_flood
 
 typedef struct s_map_cell
 {
-	t_game *game;
-	t_data *data;
-	int *player_count;
+	t_game	*game;
+	t_data	*data;
+	int		*player_count;
 }	t_map_cell;
-
 
 // void				draw_grid(mlx_image_t *img, t_game *game);
 // void				*parsing(char *argv, t_data *data, t_game *game);
@@ -292,9 +290,10 @@ int					load_map_file(char *argv, t_data *data, t_game *game);
 void				texture_loop(t_data *data, t_dda *dda_, t_raycast *rc,
 						int x);
 int					get_color(t_data *data, t_dda *dda_, t_raycast *rc);
-void	raycast_helper(t_data *data, t_raycast *rc, t_dda *dda_, int x);
-int	key_press(int keycode, t_data *data);
-int	allocate_map_memory(t_data *data, t_game *game);
+void				raycast_helper(t_data *data, t_raycast *rc,
+						t_dda *dda_, int x);
+int					key_press(int keycode, t_data *data);
+int					allocate_map_memory(t_data *data, t_game *game);
 
 # ifndef LEAKS
 #  define LEAKS 0
