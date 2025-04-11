@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_textures.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 18:39:25 by aagdemir          #+#    #+#             */
-/*   Updated: 2025/03/29 18:39:27 by aagdemir         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:11:07 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ char	*texture_path(char *tmp)
 		line++;
 	len = ft_strlen(line);
 	line[len - 1] = '\0';
-	printf("line: %s\n", line);
 	return (line);
 }
 

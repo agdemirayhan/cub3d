@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 17:11:10 by msoklova          #+#    #+#             */
-/*   Updated: 2025/03/30 17:11:36 by msoklova         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:11:59 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,5 @@ int	rgb_color(char *tmp, t_game *game)
 		game->ceil_color = (rgb.r << 16) | (rgb.g << 8) | rgb.b;
 	else if (identifier == 'F')
 		game->floor_color = (rgb.r << 16) | (rgb.g << 8) | rgb.b;
-	printf("Parsed %c color: R=%d, G=%d, B=%d\n", identifier, rgb.r, rgb.g,
-		rgb.b);
 	return (0);
 }

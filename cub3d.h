@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/11 15:14:17 by msoklova          #+#    #+#             */
+/*   Updated: 2025/04/11 15:14:19 by msoklova         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -11,9 +23,6 @@
 # include <stdlib.h>
 # include <unistd.h>
 # define PI 3.1415926535
-# define DR (M_PI / 180)
-# define P2 (M_PI / 2)
-# define P3 (3 * M_PI / 2)
 # define MOVE_SPEED 0.1
 # define ROTSPEED 0.05
 # define WIN_WIDTH 1024

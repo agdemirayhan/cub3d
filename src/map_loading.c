@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_loading.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 18:39:10 by aagdemir          #+#    #+#             */
-/*   Updated: 2025/03/29 18:39:12 by aagdemir         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:12:13 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static int	process_color(int fd, t_game *game)
 	tmp = get_next_line(fd);
 	while (tmp != NULL)
 	{
-		printf("tmp1: %s\n", tmp);
 		if ((tmp[0] == 'F' || tmp[0] == 'C') && tmp[1] == ' ')
 		{
 			result = rgb_color(tmp, game);
@@ -100,7 +99,6 @@ int	count_map_lines(char *argv, t_game *game)
 	close(fd);
 	if (game->map_h == 0)
 		return (printf("Error: No valid map found\n"), 1);
-	printf("Map height: %d\n", game->map_h);
 	return (0);
 }
 
