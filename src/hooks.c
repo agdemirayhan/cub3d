@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hooks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:19:22 by aagdemir          #+#    #+#             */
-/*   Updated: 2025/03/29 19:10:15 by aagdemir         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:13:57 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ void	move_player(t_data *data)
 {
 	double	move_dir;
 	double	move_side;
+
 	move_dir = 0;
 	move_side = 0;
-
 	if (data->mapstate.keycode_fb == 'W' || data->mapstate.keycode_fb == 'S'
 		|| data->mapstate.keycode_lr == 'A' || data->mapstate.keycode_lr == 'D')
 		move_functions(data, move_dir, move_side);

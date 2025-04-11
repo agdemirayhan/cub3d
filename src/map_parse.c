@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 18:40:22 by aagdemir          #+#    #+#             */
-/*   Updated: 2025/03/29 18:40:24 by aagdemir         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:12:23 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	find_max_width_and_expand(t_game *game)
 	}
 	expand_map_lines(game);
 	print_map_comp(game);
-	printf("Map width: %d\n", game->map_l);
 }
 
 int	validate_map(t_game *game, t_data *data)

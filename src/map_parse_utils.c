@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_parse_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 18:51:39 by aagdemir          #+#    #+#             */
-/*   Updated: 2025/03/29 18:51:41 by aagdemir         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:11:20 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	load_textures(int fd, t_data *data)
 			free(tmp);
 			return (ft_putstr_fd("Error: Failed to load texture\n", 1), 1);
 		}
-		printf("sign: %d\n", sign);
 		free(tmp);
 		tmp = get_next_line(fd);
 		k++;
