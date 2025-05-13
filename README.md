@@ -39,12 +39,4 @@
     <li>A map made of <code>1</code> (walls), <code>0</code> (empty space), and one player start (N/S/E/W)</li>
   </ul>
 
-  <h2>Bonus (if implemented)</h2>
-  <ul>
-    <li>Wall collisions</li>
-    <li>Minimap</li>
-    <li>Doors</li>
-    <li>Sprites</li>
-    <li>Mouse look</li>
-  </ul>
 
